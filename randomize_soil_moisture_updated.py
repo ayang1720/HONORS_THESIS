@@ -2,7 +2,7 @@
 task 2 honors project, randomizing soil moisture Alex Yang 5/22/26
 /fs/scratch/PAS3252/yang/HONORS_THESIS
 /users/PAS3252/ayang1720/HONORS_THESIS
-/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform
+/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/
 ncdump -h x1.40962.init.nc
 '''
 #NOTE: the files produced will be saved to the scratch directory

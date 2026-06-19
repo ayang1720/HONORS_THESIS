@@ -10,6 +10,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import pickle
 
+#edited z500,z250,smois to rainc (accumulated convective precip),t2m,q2
+
 #settings
 number_of_ensembles=100
 number_of_iterations=729
@@ -22,13 +24,13 @@ for i in range(number_of_ensembles):
 #NOTE: over here, we're going to initialize empty arrays for spatial averages
 fname=paths[i]+'diag.'+itime.strftime('%Y-%m-%d_%H.%M.%S')+'.nc'
 nc=Dataset(fname)
-Z500=np.squeeze(np.array(nc['height_500hPa']))
-Z250=np.squeeze(np.array(nc['height_250hPa']))
-smois=np.squeeze(np.array(nc['smois']))
-smois=smois[:,0]
-Z500_average=np.zeros((len(Z500))) #(40962) instead of (40962,729,100)
-Z250_average=np.zeros((len(Z250)))
-smois_average=np.zeros((len(smois)))
+Z500=np.squeeze(np.array(nc['rainc']))
+Z250=np.squeeze(np.array(nc['t2m']))
+smois=np.squeeze(np.array(nc['qm']))
+#smois=smois[:,0]
+Z500_average=np.zeros(number_of_iterations)
+Z250_average=np.zeros(number_of_iterations)
+smois_average=np.zeros(number_of_iterations)
 t=itime
 
 #redoing the loop to compute the spatially-averaged variance for each timestep in each iteration
@@ -45,10 +47,10 @@ while t<=ftime:
         #smois(Time, nCells, nSoilLevels)
         fname=paths[i]+'diag.'+t.strftime('%Y-%m-%d_%H.%M.%S')+'.nc'
         nc=Dataset(fname)
-        Z500=np.squeeze(np.array(nc['height_500hPa']))
-        Z250=np.squeeze(np.array(nc['height_250hPa']))
-        smois=np.squeeze(np.array(nc['smois']))
-        smois=smois[:,0]
+        Z500=np.squeeze(np.array(nc['rainc']))
+        Z250=np.squeeze(np.array(nc['t2m']))
+        smois=np.squeeze(np.array(nc['qm']))
+        #smois=smois[:,0]
         
         Z500_array[:,i]=Z500
         Z250_array[:,i]=Z250
@@ -65,7 +67,7 @@ while t<=ftime:
     #end time loop
 
 avg_dict={}
-avg_dict['Z500']=Z500_average
-avg_dict['Z250']=Z250_average
-avg_dict['smois']=smois_average
-pickle.dump(avg_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/averages_100.pkl','wb'))
+avg_dict['rainc']=Z500_average
+avg_dict['t2m']=Z250_average
+avg_dict['qm']=smois_average
+pickle.dump(avg_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/averages_100_2.pkl','wb'))

@@ -12,12 +12,12 @@ import numpy as np
 #grabbing data
 avg_dict=pickle.load(open('/fs/scratch/PAS3252/yang/HONORS_THESIS/averages_100.pkl','rb'))
 #accidentally created this array to hold 40962 values instead of 729
-Z500_average=avg_dict['Z500'][:729]
-Z250_average=avg_dict['Z250'][:729]
-smois_average=avg_dict['smois'][:729]
-Z500_time=np.arange(729)
-Z250_time=np.arange(729)
-smois_time=np.arange(729)
+Z500_average=avg_dict['Z500']
+Z250_average=avg_dict['Z250']
+smois_average=avg_dict['smois']
+Z500_time=np.arange(len(Z500_average))
+Z250_time=np.arange(len(Z250_average))
+smois_time=np.arange(len(smois_average))
 Z500_time+=1
 Z250_time+=1
 smois_time+=1
@@ -36,5 +36,7 @@ axs[2].set_ylabel('Variance',fontsize=24)
 axs[0].set_title('Height at 500mb',fontsize=30)
 axs[1].set_title('Height at 250mb',fontsize=30)
 axs[2].set_title('Soil Moisture',fontsize=30)
-plt.savefig('time_series_plots_100.png')
+plt.savefig('time_series_plots_100_edited.png')
 plt.close()
+
+#editing the pickle file
