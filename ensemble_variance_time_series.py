@@ -26,7 +26,7 @@ fname=paths[i]+'diag.'+itime.strftime('%Y-%m-%d_%H.%M.%S')+'.nc'
 nc=Dataset(fname)
 Z500=np.squeeze(np.array(nc['rainc']))
 Z250=np.squeeze(np.array(nc['t2m']))
-smois=np.squeeze(np.array(nc['qm']))
+smois=np.squeeze(np.array(nc['q2']))
 #smois=smois[:,0]
 Z500_average=np.zeros(number_of_iterations)
 Z250_average=np.zeros(number_of_iterations)
@@ -49,7 +49,7 @@ while t<=ftime:
         nc=Dataset(fname)
         Z500=np.squeeze(np.array(nc['rainc']))
         Z250=np.squeeze(np.array(nc['t2m']))
-        smois=np.squeeze(np.array(nc['qm']))
+        smois=np.squeeze(np.array(nc['q2']))
         #smois=smois[:,0]
         
         Z500_array[:,i]=Z500
@@ -69,5 +69,5 @@ while t<=ftime:
 avg_dict={}
 avg_dict['rainc']=Z500_average
 avg_dict['t2m']=Z250_average
-avg_dict['qm']=smois_average
+avg_dict['q2']=smois_average
 pickle.dump(avg_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/averages_100_2.pkl','wb'))
