@@ -131,3 +131,12 @@ print("The correlation between smois and z250: "+str(correlation_z250))
 print("The correlation between smois and rainc: "+str(correlation_rainc))
 print("The correlation between smois and t2m: "+str(correlation_t2m))
 print("The correlation between smois and q2: "+str(correlation_q2))
+
+esa_dict={}
+esa_dict['smois']=conus_smois
+esa_dict['z500']=conus_z500
+esa_dict['z250']=conus_z250
+esa_dict['rainc']=conus_rainc
+esa_dict['t2m']=conus_t2m
+esa_dict['q2']=conus_q2
+pickle.dump(esa_dict,open('ESA.pkl','wb'))
