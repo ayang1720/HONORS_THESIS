@@ -8,9 +8,9 @@ import numpy as np
 
 esa_dict=pickle.load(open('ESA.pkl','rb'))
 smois=esa_dict['smois']
-z500=esa_dict['z500']
-z250=esa_dict['z250']
-rainc=esa_dict['rainc']
+z500=esa_dict['height_500hPa']
+z250=esa_dict['height_250hPa']
+rainc=esa_dict['rainnc']
 t2m=esa_dict['t2m']
 q2=esa_dict['q2']
 fig,axs=plt.subplots(nrows=3,ncols=2,constrained_layout=True,figsize=(10,16))
@@ -24,7 +24,7 @@ for i in range(3):
         axs[i,j].set_xlabel('smois',fontsize=24)
 axs[0,0].set_ylabel('z500',fontsize=24)
 axs[0,1].set_ylabel('z250',fontsize=24)
-axs[1,0].set_ylabel('rainc',fontsize=24)
+axs[1,0].set_ylabel('rainnc',fontsize=24)
 axs[1,1].set_ylabel('t2m',fontsize=24)
 axs[2,0].set_ylabel('q2',fontsize=24)
 plt.savefig('esa_scatter_plots.png')
