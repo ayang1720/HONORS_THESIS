@@ -147,6 +147,7 @@ esa_dict['smois']=conus_smois
 esa_dict['land_mask']=land_mask
 esa_dict['conus_mask']=conus_mask
 esa_dict['glace_mask']=glace_mask
+esa_dict['correlations']=correlations
 for i in range(len(response_variables)):
     esa_dict[response_variables[i]]=(conusify(global_arrays[i,:,:],land_mask,conus_mask))
 pickle.dump(esa_dict,open('ESA.pkl','wb'))
