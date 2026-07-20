@@ -3,52 +3,61 @@ Alex Yang Honors Thesis Task 6 SU26
 /users/PAS3252/ayang1720/HONORS_THESIS
 /fs/ess/PAS2635/LandAir_Predictability
 /fs/scratch/PAS3252/yang/HONORS_THESIS
-
-most of the code was copied over from task 5, but the new mask used for soil moisure
-pulls only smois data from where coupling has shown to be strongest from the glace
-experiment done by koster et. al (2006) -> we're going to restrict the conus domain
-to just 37-44 N lat and 97-104 W lon (great plains showed most significant in conus)
-
 '''
 
 #imports
 import pickle
 import numpy as np
 from netCDF4 import Dataset
+from datetime import datetime, timedelta
 
 #settings
 number_of_ensembles=100
 ncells=40962
-response_variables=['z500','z250','rainnc','t2m','q2']
 response_variables=['height_500hPa','height_250hPa','rainnc','t2m','q2']
+smois_start_time=datetime.strptime('20210714210000','%Y%m%d%H%M%S') #7/14/21 at 21Z
+variables_start_time=datetime.strptime('20210801210000','%Y%m%d%H%M%S') #8/1/21 at 21Z
 
-#input: array of response variables names, that get pulled from the .nc file for august 1st
-#output: array containing 100 ensemble runs of 40962 grid cells for each of the (in this case) 5 response variables
+#input: array (5) of response variables names, that get pulled from the .nc file for august 1st
+#output: array (5,100,40962) of 100 ensemble runs of 40962 grid cells for each response variable
 def construct_array(responses):
     array_of_global_response_variables=np.zeros((len(responses),number_of_ensembles,ncells))
     paths=np.empty(number_of_ensembles,dtype='object')
     paths_minus_3_hours=np.empty(number_of_ensembles,dtype='object')
     for i in range(number_of_ensembles):
-        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.2021-08-01_21.00.00.nc'
-        paths_minus_3_hours[i]=paths[i][:-16]+'8-01_18.00.00.nc'
+        time=variables_start_time.strftime('%Y-%m-%d_%H.%M.%S')
+        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+time+'.nc'
+        paths_minus_3_hours[i]=paths[i][:-22]+str(variables_start_time-timedelta(hours=3))+'.nc'
+        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(" ", "_")
+        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(":", ".")
     for i in range(number_of_ensembles):
         fname=paths[i]
         fname2=paths_minus_3_hours[i]
         nc=Dataset(fname)
         nd=Dataset(fname2)
         for j in range(len(response_variables)):
-            if (response_variables[j]=='rainnc'):
+            time=variables_start_time.strftime('%Y-%m-%d_%H.%M.%S')
+            time=time.replace(" ", "_")
+            if (response_variables[j]=='rainnc'): #find just a 3 hour integrated time span
                 rainnc_in_the_3_hour_range=(np.squeeze(np.array(nc[response_variables[j]])))-\
                     (np.squeeze(np.array(nd[response_variables[j]])))
                 array_of_global_response_variables[j,i,:]=rainnc_in_the_3_hour_range
-            else:
-                array_of_global_response_variables[j,i,:]=(np.squeeze(np.array(nc[response_variables[j]])))
-            #array of z500 heights, each with ncells=40962
-            #array of z250 heights, each with ncells=40962
-            #array of cumulative precipitation in mm, each with ncells=40962
-            #array of 2 meter temperature K, each with ncells=40962
-            #array of 2 meter specific humidity kg/kg, each with ncells=40962
+            else: #finding the average of the response variables over a day
+                sum_over_a_day=np.zeros(ncells)
+                for k in range(8):
+                    hour_step=timedelta(k*3)
+                    itime=datetime.strptime(time,'%Y-%m-%d_%H.%M.%S')
+                    itime+=hour_step
+                    jtime=itime.strftime('%Y-%m-%d_%H.%M.%S')
+                    fname3=fname[:57]+jtime+'.nc'
+                    ne=Dataset(fname3)
+                    array_of_global_response_variables[j,i,:]=(np.squeeze(np.array(ne[response_variables[j]])))
+                    sum_over_a_day+=array_of_global_response_variables[j,i,:]
+                sum_over_a_day/=8
+                array_of_global_response_variables[j,i,:]=sum_over_a_day
         nc.close()
+        nd.close()
+        ne.close()
         print('ensemble #'+str(i+1))
     return array_of_global_response_variables
 
@@ -97,7 +106,7 @@ def turn_response_variables_into_correlation_array(global_states_array,conus_smo
 
 #script
 
-#constructing the CONUS mask and land mask
+#constructing the CONUS mask and land mask NOTE: edited land_mask to alway be true
 fname='/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/history.2025-10-01_06.00.00.nc'
 nc=Dataset(fname)
 latCell=np.array(nc['latCell']) #in radians
@@ -109,6 +118,7 @@ conus_mask=True #change conus_mask to just apply to the entire world
 fname='/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/x1.40962.init.nc'
 nc=Dataset(fname)
 land_mask=np.squeeze(np.array(nc['landmask']))
+land_mask=True #land_mask now no longer applies at all
 
 #constructing the GLACE mask
 glace_mask=(latCell>=37)*(latCell<=44)*(lonCell>=(360-104))*(lonCell<=(360-97))
@@ -145,12 +155,16 @@ for i in range(len(response_variables)):
     for j in range(ncells):
         print(correlations[j,i])
 
+#generate smois correlated against smois
+smois_smois_correlation=cov(smois_array,smois_array)/np.sqrt(var_conus_smois)/np.sqrt(var_conus_smois)
+
 esa_dict={}
 esa_dict['smois']=conus_smois
 esa_dict['land_mask']=land_mask
 esa_dict['conus_mask']=conus_mask
 esa_dict['glace_mask']=glace_mask
 esa_dict['correlations']=correlations
+esa_dict['smois_smois_correlation']=smois_smois_correlation
 for i in range(len(response_variables)):
     esa_dict[response_variables[i]]=(conusify(global_arrays[i,:,:],land_mask,conus_mask))
 pickle.dump(esa_dict,open('ESA.pkl','wb'))
