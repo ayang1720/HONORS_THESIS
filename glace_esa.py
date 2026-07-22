@@ -12,6 +12,7 @@ import numpy as np
 from netCDF4 import Dataset
 from datetime import datetime, timedelta
 from scipy.stats import beta, false_discovery_control
+import math
 
 #settings
 number_of_ensembles=100
@@ -85,8 +86,6 @@ def cor(X1d,R2d):
     std_R = np.std( R2d, ddof=1, axis=-1 )
     correlation = covariance / ( std_X * std_R)
 
-    print(np.shape(correlation))#check shape to be 40962
-
     return correlation
 
 #input: 1d array of size (40000) -> correlations
@@ -128,12 +127,7 @@ for i in range(number_of_ensembles):
 glaced_smois_array=np.empty(number_of_ensembles,dtype='object')
 for i in range(number_of_ensembles):
     glaced_smois_array[i]=smois_array[i,:][glace_mask]
-    temp_not_zeroed=np.mean(glaced_smois_array[i])
-    print(temp_not_zeroed) #should be a diffent, smaller value
     glaced_smois_array[i]=np.mean(glaced_smois_array[i][glaced_smois_array[i]!=0])
-    print(glaced_smois_array[i])
-#need also to pass in a 100 element array of a single cell 40962 times for each time step
-#you'll pass glaced_smois_array into your cor function
 
 #check the following 4 lines for accuracy
 #constructing the atmospheric state array for the entire globe on aug 1 (100 arrays of 40962 cells each)
@@ -145,21 +139,33 @@ for i in range(len(response_variables)):
     global_arrays_2d=global_arrays[i,:,:]
     transposed_global_arrays=global_arrays_2d.T
     correlations[i,:]=cor(glaced_smois_array,transposed_global_arrays)
-    #pvalues=pvalue(correlations,number_of_ensembles) #creates an array of 40962 pvalues for a specified time/date
-    #NOTE: pvalues throw an error because some correlations are outside the interval [-1,1]
+flag_keep = np.invert( np.isnan( correlations[2,:] ) ) #keep this flag, then apply it to the correlations array
+correlations[2,:] = [0 if isinstance(x, float) and math.isnan(x) else x for x in correlations[2,:]] #help from ChatGPT, replaces all nan with 0
+pvalues=pvalue(correlations,number_of_ensembles) #creates an array of 40962 pvalues for a specified time/date
 
 for i in range(len(response_variables)):
     for j in range(ncells):
         print("correlation for "+response_variables[i]+", cell #"+str(j)+":")
         print(correlations[i,j])
-        #print("p-value:")
-        #print(pvalues[i,j])
+        print("p-value:")
+        print(pvalues[i,j])
+
+# Array corr_old contains NaNs
+
+# Flags indicating non-NaN values
+
+# Array of non-Nan Values
+#correlations[2,:] = correlations[2,:][ flag_keep  ]
+#NOTE: don't apply the flag just yet---apply before plotting
+
+#now, the rainnc correlations have shape 39281 instead of 40962
 
 esa_dict={}
+esa_dict['flag_keep']=flag_keep
 esa_dict['smois']=glaced_smois_array
 esa_dict['glace_mask']=glace_mask
 esa_dict['correlations']=correlations
-esa_dict['p-values']=pvalues #right now is just an array of zeros size (5,40962)
+esa_dict['p-values']=pvalues
 for i in range(len(response_variables)):
     esa_dict[response_variables[i]]=(global_arrays[i,:,:]) #each with size (100,40962)
 pickle.dump(esa_dict,open('ESA.pkl','wb'))

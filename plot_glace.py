@@ -16,15 +16,12 @@ import math
 ncells=40962
 response_variables=['height_500hPa','height_250hPa','rainnc','t2m','q2','']
 response_variables=np.reshape(response_variables,(3,2))
+response_variables2=['height_500hPa','height_250hPa','rainnc','t2m','q2','']
 
 #script
 esa_dict=pickle.load(open('ESA.pkl','rb'))
-correlations=esa_dict['correlations']
-print(np.shape(correlations)) #40962*5
-
-for i in range(40962):
-    if(((correlations[2,i])>1) or (correlations[2,1]<-1) or math.isinf(correlations[2,1]) or np.isnan(correlations[2,1])):
-        print("cell #"+str(i))
+correlations=esa_dict['p-values'] #edited to be p-values
+flag_keep=esa_dict['flag_keep'] #NOTE: have not applied the flag yet to correlations! nan still replaced with 0!
 
 #plotting
 fname='/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/history.2025-10-01_06.00.00.nc'
@@ -47,63 +44,52 @@ for i in range(3):
         if (i==2) and (j==1):
             ax.set_title('Smois on 7/14 vs. Smois on 7/14',fontsize=24)
 
-sc=axs[0,0].scatter(lonCell,latCell,c=correlations[0],\
+pvalue_mask=correlations[0]<=0.5
+lonCell1=lonCell[pvalue_mask]
+latCell1=latCell[pvalue_mask]
+correlations0=correlations[0][pvalue_mask]
+sc=axs[0,0].scatter(lonCell1,latCell1,c=correlations0,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
 fig.colorbar(sc,ax=axs[0,0])
-sc=axs[0,1].scatter(lonCell,latCell,c=correlations[1],\
+pvalue_mask=correlations[1]<=0.5
+lonCell2=lonCell[pvalue_mask]
+latCell2=latCell[pvalue_mask]
+correlations1=correlations[1][pvalue_mask]
+sc=axs[0,1].scatter(lonCell2,latCell2,c=correlations1,\
                  cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
 fig.colorbar(sc,ax=axs[0,1])
-sc=axs[1,0].scatter(lonCell,latCell,c=correlations[2],\
+lonCell3=lonCell[flag_keep]
+latCell3=latCell[flag_keep]
+correlations2=correlations[2][flag_keep]
+pvalue_mask=correlations[2]<=0.5
+lonCell3=lonCell[pvalue_mask]
+latCell3=latCell[pvalue_mask]
+correlations2=correlations[2][pvalue_mask]
+sc=axs[1,0].scatter(lonCell3,latCell3,c=correlations2,\
                  cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
 fig.colorbar(sc,ax=axs[1,0])
-sc=axs[1,1].scatter(lonCell,latCell,c=correlations[3],\
+pvalue_mask=correlations[3]<=0.5
+lonCell4=lonCell[pvalue_mask]
+latCell4=latCell[pvalue_mask]
+correlations3=correlations[3][pvalue_mask]
+sc=axs[1,1].scatter(lonCell4,latCell4,c=correlations3,\
                  cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
 fig.colorbar(sc,ax=axs[1,1])
-sc=axs[2,0].scatter(lonCell,latCell,c=correlations[4],\
+pvalue_mask=correlations[4]<=0.5
+lonCell5=lonCell[pvalue_mask]
+latCell5=latCell[pvalue_mask]
+correlations4=correlations[4][pvalue_mask]
+sc=axs[2,0].scatter(lonCell5,latCell5,c=correlations4,\
                  cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
 fig.colorbar(sc,ax=axs[2,0])
 
-'''
-ps=np.zeros((ncells,5))
-for i in range(5):
-        for k in range(40962):
-            r=correlations[i,k]
-            if (math.isinf(r)):
-                r=0
-            t_stat=r*np.sqrt((100-2)/(1-r**2))
-            ps[k,i]=2*(1-scipy.stats.t.cdf(np.abs(t_stat),df=100-2))
-new_ps=scipy.stats.false_discovery_control(ps,method='by')
 number_of_statistically_significant=np.zeros((5))
 for i in range(5):
-    number_of_statistically_significant[i]=np.sum(new_ps[:,i]<=0.05)
-    print(number_of_statistically_significant)
-'''
-
-number_of_statistically_significant=np.zeros((5))
-for i in range(5):
-    number_of_statistically_significant[i]=np.sum(np.abs(correlations[i,:])>=0.2)
+    number_of_statistically_significant[i]=np.sum(correlations[i,:]<=0.05)
+    print("for variable " + response_variables2[i] + ", there are this many significant cells:")
+    print(number_of_statistically_significant[i])
     print(number_of_statistically_significant[i]/40962)
-statistically_significant_mask=np.abs(correlations)<0.2
-correlations=np.where(statistically_significant_mask,correlations,0)
 
 plt.savefig('glace_plot_7_20_26.png')
 
-'''
-sc=axs[0,0].scatter(lonCell,latCell,c=correlations[0],\
-                    cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
-fig.colorbar(sc,ax=axs[0,0])
-sc=axs[0,1].scatter(lonCell,latCell,c=correlations[1],\
-                 cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
-fig.colorbar(sc,ax=axs[0,1])
-sc=axs[1,0].scatter(lonCell,latCell,c=correlations[2],\
-                 cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
-fig.colorbar(sc,ax=axs[1,0])
-sc=axs[1,1].scatter(lonCell,latCell,c=correlations[3],\
-                 cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
-fig.colorbar(sc,ax=axs[1,1])
-sc=axs[2,0].scatter(lonCell,latCell,c=correlations[4],\
-                 cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
-fig.colorbar(sc,ax=axs[2,0])
-plt.savefig('glace_plot_7_20_26_only_significant.png')
-'''
 plt.close()
