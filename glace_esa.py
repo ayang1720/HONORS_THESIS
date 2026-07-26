@@ -1,10 +1,11 @@
 '''
-Alex Yang Honors Thesis Task 6 SU26
+Alex Yang Honors Thesis
 /users/PAS3252/ayang1720/HONORS_THESIS
 /fs/ess/PAS2635/LandAir_Predictability
 /fs/scratch/PAS3252/yang/HONORS_THESIS
-NEW 7/20/26
 '''
+
+#convert -delay 30 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august.gif
 
 #imports
 import pickle
@@ -12,7 +13,6 @@ import numpy as np
 from netCDF4 import Dataset
 from datetime import datetime, timedelta
 from scipy.stats import beta, false_discovery_control
-import math
 
 #settings
 number_of_ensembles=100
@@ -26,13 +26,14 @@ variables_start_time=datetime.strptime('20210801210000','%Y%m%d%H%M%S') #8/1/21 
 #input: number_of_ensembles,ncells -> 100,40962 in this case
 #output: array (5,100,40962) of 100 ensemble runs of 40962 grid cells for each response variable
 def construct_array(responses,time,number_of_ensembles,ncells):
+    day=time.strftime('%m/%d')
     array_of_global_response_variables=np.zeros((len(responses),number_of_ensembles,ncells))
     paths=np.empty(number_of_ensembles,dtype='object')
     paths_minus_3_hours=np.empty(number_of_ensembles,dtype='object')
     for i in range(number_of_ensembles):
-        time=variables_start_time.strftime('%Y-%m-%d_%H.%M.%S')
-        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+time+'.nc'
-        paths_minus_3_hours[i]=paths[i][:-22]+str(variables_start_time-timedelta(hours=3))+'.nc'
+        datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
+        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+datetime+'.nc'
+        paths_minus_3_hours[i]=paths[i][:-22]+str(time-timedelta(hours=3))+'.nc'
         paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(" ", "_")
         paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(":", ".")
     for i in range(number_of_ensembles):
@@ -41,8 +42,8 @@ def construct_array(responses,time,number_of_ensembles,ncells):
         nc=Dataset(fname)
         nd=Dataset(fname2)
         for j in range(len(response_variables)):
-            time=variables_start_time.strftime('%Y-%m-%d_%H.%M.%S')
-            time=time.replace(" ", "_")
+            datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
+            datetime=datetime.replace(" ", "_")
             if (response_variables[j]=='rainnc'): #find just a 3 hour integrated time span
                 rainnc_in_the_3_hour_range=(np.squeeze(np.array(nc[response_variables[j]])))-\
                     (np.squeeze(np.array(nd[response_variables[j]])))
@@ -51,7 +52,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
                 sum_over_a_day=np.zeros(ncells)
                 for k in range(8):
                     hour_step=timedelta(k*3)
-                    itime=datetime.strptime(time,'%Y-%m-%d_%H.%M.%S')
+                    itime=time.strptime(datetime,'%Y-%m-%d_%H.%M.%S')
                     itime+=hour_step
                     jtime=itime.strftime('%Y-%m-%d_%H.%M.%S')
                     fname3=fname[:57]+jtime+'.nc'
@@ -63,16 +64,16 @@ def construct_array(responses,time,number_of_ensembles,ncells):
         nc.close()
         nd.close()
         ne.close()
+        print('day: '+day)
         print('ensemble #'+str(i+1))
     return array_of_global_response_variables
+
 #input:
 #X: 100 ensemble members' area averaged soil moisture array july 14th (glace mask)
-#X: area averaged soil moisture (fixed) should be the same for each of the 40000 cells
-#R: atmospheric state of 100 values on august 1st for a single cell
-#R: R changes depending on which cell you're examining, size (40962,100)
-
+#R: atmospheric state of 100 values on variable datetime for a single cell (~39281 or 40962,100)
 #output:
-#correlation: a 1d array (40962) representing correlation between X/R -> all values between -1 and 1
+#correlation: a 1d array representing correlation between X/R -> all values between -1 and 1
+#note that for rainnc, certain values have been masked out, so array might have size ~39281
 
 def cor(X1d,R2d):
     number_of_ensembles = len(X1d)
@@ -86,10 +87,16 @@ def cor(X1d,R2d):
     std_R = np.std( R2d, ddof=1, axis=-1 )
     correlation = covariance / ( std_X * std_R)
 
+    correlation=np.array(correlation,dtype=float)
+
+    flag_keep=np.invert(np.isnan(correlation))
+    correlation=correlation[flag_keep]
+
     return correlation
 
-#input: 1d array of size (40000) -> correlations
-#output: 1d array of size (40000) -> p values
+#input: 1d array of correlations
+#output: 1d array of p values
+#in this case, we're passing in a 2d array and getting out a 2d array (axis 0 is the 5 state variables)
 def pvalue(correlation,number_of_ensembles):
     n=number_of_ensembles
     dist = beta(n/2 - 1, n/2 - 1, loc=-1, scale=2)
@@ -97,6 +104,29 @@ def pvalue(correlation,number_of_ensembles):
     p=2*dist.cdf(-abs(r))
     p=false_discovery_control(p, axis=0, method='by')
     return p
+
+#input: p-values array, lon array, lat array
+#output: p-values array, lon array, lat array, with insignificant cells masked out
+def significant_cells(pvalues,lons,lats):
+    pvalue_mask=(pvalues<=0.05)
+    pvalues=pvalues[pvalue_mask]
+    lons=lons[pvalue_mask]
+    lats=lats[pvalue_mask]
+    return pvalues,lons,lats
+
+#input: glaced smois array, 1d array of only response variables, datetime of the simulation, number of ensembles, ncells
+#output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
+def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
+    pvalues=np.zeros((len(response_variables),ncells))
+    for i in range(len(response_variables)):
+        global_arrays_2d=global_arrays[i,:,:]
+        transposed_global_arrays=global_arrays_2d.T
+        ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
+        correlations[i,:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    return pvalues
 
 #script
 
@@ -129,43 +159,8 @@ for i in range(number_of_ensembles):
     glaced_smois_array[i]=smois_array[i,:][glace_mask]
     glaced_smois_array[i]=np.mean(glaced_smois_array[i][glaced_smois_array[i]!=0])
 
-#check the following 4 lines for accuracy
-#constructing the atmospheric state array for the entire globe on aug 1 (100 arrays of 40962 cells each)
-#global_arrays=np.zeros((len(response_variables),number_of_ensembles,ncells))
-global_arrays=construct_array(response_variables,variables_start_time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
-correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
-pvalues=np.zeros((len(response_variables),ncells))
-for i in range(len(response_variables)):
-    global_arrays_2d=global_arrays[i,:,:]
-    transposed_global_arrays=global_arrays_2d.T
-    correlations[i,:]=cor(glaced_smois_array,transposed_global_arrays)
-flag_keep = np.invert( np.isnan( correlations[2,:] ) ) #keep this flag, then apply it to the correlations array
-correlations[2,:] = [0 if isinstance(x, float) and math.isnan(x) else x for x in correlations[2,:]] #help from ChatGPT, replaces all nan with 0
-pvalues=pvalue(correlations,number_of_ensembles) #creates an array of 40962 pvalues for a specified time/date
-
-for i in range(len(response_variables)):
-    for j in range(ncells):
-        print("correlation for "+response_variables[i]+", cell #"+str(j)+":")
-        print(correlations[i,j])
-        print("p-value:")
-        print(pvalues[i,j])
-
-# Array corr_old contains NaNs
-
-# Flags indicating non-NaN values
-
-# Array of non-Nan Values
-#correlations[2,:] = correlations[2,:][ flag_keep  ]
-#NOTE: don't apply the flag just yet---apply before plotting
-
-#now, the rainnc correlations have shape 39281 instead of 40962
-
 esa_dict={}
-esa_dict['flag_keep']=flag_keep
-esa_dict['smois']=glaced_smois_array
-esa_dict['glace_mask']=glace_mask
-esa_dict['correlations']=correlations
-esa_dict['p-values']=pvalues
-for i in range(len(response_variables)):
-    esa_dict[response_variables[i]]=(global_arrays[i,:,:]) #each with size (100,40962)
+esa_dict['smois_1d']=glaced_smois_array #100 smois values
+esa_dict['lat_1d']=latCell #40962 lat cells
+esa_dict['lon_1d']=lonCell #40962 lon cells
 pickle.dump(esa_dict,open('ESA.pkl','wb'))
