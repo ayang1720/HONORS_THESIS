@@ -29,7 +29,7 @@ lonCell=esa_dict['lon_1d'] #40962 lon cells
 
 while(time<=ftime):
     pvalues=glace_esa.glace_esa(glaced_smois_array,response_variables2[:-1],time,number_of_ensembles,ncells)
-    fig,axs=plt.subplots(nrows=3,ncols=2,figsize=(25,15),layout='constrained',\
+    fig,axs=plt.subplots(nrows=3,ncols=2,figsize=(24,15),constrained_layout=True,\
     subplot_kw={"projection":ccrs.PlateCarree()})
     for i in range(3):
         for j in range(2):
@@ -42,34 +42,40 @@ while(time<=ftime):
 
     statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
-    axs[0,0].set_title('Smois on 7/14 vs. '+response_variables[i,j]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
+    axs[0,0].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
     sc=axs[0,0].scatter(lons,lats,c=statgood,\
                         cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[0,0])
     statgood,lons,lats=glace_esa.significant_cells(pvalues[1],lonCell,latCell)
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
-    axs[0,1].set_title('Smois on 7/14 vs. '+response_variables[i,j]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
+    axs[0,1].set_title('Smois on 7/14 vs. '+response_variables[0,1]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
     sc=axs[0,1].scatter(lons,lats,c=statgood,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[0,1])
     statgood,lons,lats=glace_esa.significant_cells(pvalues[2],lonCell,latCell)
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
-    axs[1,0].set_title('Smois on 7/14 vs. '+response_variables[i,j]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
+    axs[1,0].set_title('Smois on 7/14 vs. '+response_variables[1,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
     sc=axs[1,0].scatter(lons,lats,c=statgood,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[1,0])
     statgood,lons,lats=glace_esa.significant_cells(pvalues[3],lonCell,latCell)
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
-    axs[1,1].set_title('Smois on 7/14 vs. '+response_variables[i,j]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
+    axs[1,1].set_title('Smois on 7/14 vs. '+response_variables[1,1]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
     sc=axs[1,1].scatter(lons,lats,c=statgood,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[1,1])
     statgood,lons,lats=glace_esa.significant_cells(pvalues[4],lonCell,latCell)
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
-    axs[2,0].set_title('Smois on 7/14 vs. '+response_variables[i,j]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
+    axs[2,0].set_title('Smois on 7/14 vs. '+response_variables[2,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
     sc=axs[2,0].scatter(lons,lats,c=statgood,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[2,0])
+
+    axs[0,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+    axs[0,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+    axs[1,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+    axs[1,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+    axs[2,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 
     plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png')
 
