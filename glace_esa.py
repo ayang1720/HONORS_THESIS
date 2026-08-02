@@ -5,7 +5,18 @@ Alex Yang Honors Thesis
 /fs/scratch/PAS3252/yang/HONORS_THESIS
 '''
 
-#convert -delay 30 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august.gif
+#the more recent files have 3 days integration, the ones before it had 3 hours integration, both are correlations
+
+#did this one already -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*00.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_pvalues_3_hours.gif
+
+#correlations 3 days do this one next! ->accidentally did 3 hours instead of 3 days for this one -> edited to fix it
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*ions.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_correlations_3_hours.gif
+
+#correlations 3 hours, replace the text name then do that one -> this next convert does 3 days -> edited to fix it
+
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*correlations_for_3_days.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_correlations_3_days.gif
+
+#did this one already convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*ays.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_pvalues_3_days.gif
 
 #imports
 import pickle
@@ -33,7 +44,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
     for i in range(number_of_ensembles):
         datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
         paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+datetime+'.nc'
-        paths_minus_3_hours[i]=paths[i][:-22]+str(time-timedelta(hours=3))+'.nc'
+        paths_minus_3_hours[i]=paths[i][:-22]+str(time-timedelta(days=3))+'.nc' #replaced with 72 hours
         paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(" ", "_")
         paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(":", ".")
     for i in range(number_of_ensembles):
@@ -43,7 +54,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
         nd=Dataset(fname2)
         for j in range(len(response_variables)):
             datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
-            datetime=datetime.replace(" ", "_")
+            datetime=datetime.replace(" ", "_") #7/27/26 edit: replaced with 72 hour
             if (response_variables[j]=='rainnc'): #find just a 3 hour integrated time span
                 rainnc_in_the_3_hour_range=(np.squeeze(np.array(nc[response_variables[j]])))-\
                     (np.squeeze(np.array(nd[response_variables[j]])))
@@ -89,8 +100,8 @@ def cor(X1d,R2d):
 
     correlation=np.array(correlation,dtype=float)
 
-    flag_keep=np.invert(np.isnan(correlation))
-    correlation=correlation[flag_keep]
+    #flag_keep=np.invert(np.isnan(correlation)) #NOTE edited out 7/27 for correlations instead of pvalues
+    #correlation=correlation[flag_keep] #these two lines get commented out for correlations
 
     return correlation
 
@@ -119,14 +130,18 @@ def significant_cells(pvalues,lons,lats):
 def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
     global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
     correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
-    pvalues=np.zeros((len(response_variables),ncells))
+    #pvalues=np.zeros((len(response_variables),ncells)) #commented out for correlations
     for i in range(len(response_variables)):
         global_arrays_2d=global_arrays[i,:,:]
         transposed_global_arrays=global_arrays_2d.T
         ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
         correlations[i,:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
-    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
-    return pvalues
+
+    #pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    #don't compute pvalues for correlations
+
+    return correlations #replaced with the correlations, removed the line that flags nan vlaues NOTE edit 7/27
+    #return pvalues #this gets replaced when doing correlations
 
 #script
 

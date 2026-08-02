@@ -1,4 +1,5 @@
 '''
+NOTE: when making different plots, remember to change the name of the files created!
 Creating a time series of MPAS plots
 '''
 #import packages
@@ -40,36 +41,49 @@ while(time<=ftime):
             if (i==2) and (j==1):
                 ax.set_title('Blank Plot',fontsize=18)
 
-    statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
-    number_of_statistically_significant=round(statgood.size/ncells*100,3)
+    #edit on 7/27 to plot correlations instead of pvalues
+    lons=lonCell
+    lats=latCell
+    number_of_statistically_significant=""
+
+    #NOTE: chanegd limits vmin and vmax for correlations instead of pvalues
+
+    #statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
+    statgood=pvalues[0]
+    #number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs[0,0].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
-    sc=axs[0,0].scatter(lons,lats,c=statgood,\
-                        cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
+    sc=axs[0,0].scatter(lons,lats,c=statgood,vmin=-.5,vmax=.5,\
+                        cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())#-.5,.5 for correlations
     fig.colorbar(sc,ax=axs[0,0])
-    statgood,lons,lats=glace_esa.significant_cells(pvalues[1],lonCell,latCell)
-    number_of_statistically_significant=round(statgood.size/ncells*100,3)
+    #statgood,lons,lats=glace_esa.significant_cells(pvalues[1],lonCell,latCell)
+    statgood=pvalues[1]
+    #number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs[0,1].set_title('Smois on 7/14 vs. '+response_variables[0,1]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
-    sc=axs[0,1].scatter(lons,lats,c=statgood,\
-                    cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
+    sc=axs[0,1].scatter(lons,lats,c=statgood,vmin=-.5,vmax=.5,\
+                    cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree()) #0,0.05 for pvalues
     fig.colorbar(sc,ax=axs[0,1])
-    statgood,lons,lats=glace_esa.significant_cells(pvalues[2],lonCell,latCell)
-    number_of_statistically_significant=round(statgood.size/ncells*100,3)
+    #statgood,lons,lats=glace_esa.significant_cells(pvalues[2],lonCell,latCell)
+    statgood=pvalues[2]
+    #number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs[1,0].set_title('Smois on 7/14 vs. '+response_variables[1,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
-    sc=axs[1,0].scatter(lons,lats,c=statgood,\
+    sc=axs[1,0].scatter(lons,lats,c=statgood,vmin=-.5,vmax=.5,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[1,0])
-    statgood,lons,lats=glace_esa.significant_cells(pvalues[3],lonCell,latCell)
-    number_of_statistically_significant=round(statgood.size/ncells*100,3)
+    #statgood,lons,lats=glace_esa.significant_cells(pvalues[3],lonCell,latCell)
+    statgood=pvalues[3]
+    #number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs[1,1].set_title('Smois on 7/14 vs. '+response_variables[1,1]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
-    sc=axs[1,1].scatter(lons,lats,c=statgood,\
+    sc=axs[1,1].scatter(lons,lats,c=statgood,vmin=-.5,vmax=.5,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[1,1])
-    statgood,lons,lats=glace_esa.significant_cells(pvalues[4],lonCell,latCell)
-    number_of_statistically_significant=round(statgood.size/ncells*100,3)
+    #statgood,lons,lats=glace_esa.significant_cells(pvalues[4],lonCell,latCell)
+    statgood=pvalues[4]
+    #number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs[2,0].set_title('Smois on 7/14 vs. '+response_variables[2,0]+' on '+time.strftime('%m/%d')+', Significant: '+str(number_of_statistically_significant)+'%',fontsize=18)
-    sc=axs[2,0].scatter(lons,lats,c=statgood,\
+    sc=axs[2,0].scatter(lons,lats,c=statgood,vmin=-.5,vmax=.5,\
                     cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,ax=axs[2,0])
+    fig.colorbar(sc,ax=axs[2,1])
 
     axs[0,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
     axs[0,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
@@ -77,7 +91,10 @@ while(time<=ftime):
     axs[1,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
     axs[2,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 
-    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png')
+    #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_pvalues_for_3_days.png') #changed name for correlations
+    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days.png') #changed name for correlations
+    #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations.png') #changed name for correlations
+    #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png') #changed name for correlations
 
     plt.close()
     time+=timedelta(days=1)
