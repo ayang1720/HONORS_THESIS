@@ -9,9 +9,10 @@ interest; the variable changes depending on which of the 5 regions you're examin
 8/3: investigated the contribution of zero values of smois to the smois array, and
 started creating the arrays of x1 and x2 (single date used for correlation)
 8/4: created the loop that created arrays for 14 days for y1, y2, y3 and dumped to pickle
-
-#next: run loop, check the dictionary, if masks were applied to the right arrays, plot, write correlation function
+8/5: created the piclke file, saved to scratch directory
 '''
+
+#copied the pickle file produced to the scratch directory
 
 '''
 Notes to self:
@@ -49,24 +50,6 @@ Wcasp_mask=(latCell>=40)*(latCell<=50)*(lonCell>=30)*(lonCell<=50) #mask for NEL
 SEcasp_mask=(latCell>=30)*(latCell<=45)*(lonCell>=50)*(lonCell<=70) #mask for NELC 2: 50-70 e, 30-45 n (SE of caspian sea)
 Waus_mask=(latCell>=-25)*(latCell<=-15)*(lonCell>=90)*(lonCell<=110) #mask for Waus: 15-25 s, 90-110 e
 
-#functions
-
-def cor(X1d,R2d): #NOTE: edit this completely later
-    number_of_ensembles = len(X1d)
-    X1d_mean=np.mean(X1d)
-    R2d_mean=np.mean(R2d, axis=-1)
-    X1d_pert = X1d - X1d_mean
-    R2d_pert = (R2d.T - R2d_mean).T
-    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
-
-    std_X = np.std( X1d, ddof=1 )
-    std_R = np.std( R2d, ddof=1, axis=-1 )
-    correlation = covariance / ( std_X * std_R)
-
-    correlation=np.array(correlation,dtype=float)
-
-    return correlation
-
 #script
 
 #constructing the soil moisture and russia z500 arrays on july 14th
@@ -94,12 +77,9 @@ for i in range(number_of_ensembles):
 time=itime
 period=ftime-itime
 number_of_days=period.days
-print(number_of_days)
-days=int(number_of_days)
-print(days)
-Wcasp_averages=np.zeros((days,number_of_ensembles))
-SEcasp_averages=np.zeros((days,number_of_ensembles))
-Waus_averages=np.zeros((days,number_of_ensembles))
+Wcasp_averages=np.zeros((number_of_days+1,number_of_ensembles))
+SEcasp_averages=np.zeros((number_of_days+1,number_of_ensembles))
+Waus_averages=np.zeros((number_of_days+1,number_of_ensembles))
 day_number=0
 while(time<=ftime):
     day=time.strftime('%m/%d')
@@ -148,49 +128,4 @@ esa_dict['x2']=averaged_russia_array #(ensembles)
 esa_dict['y1']=Wcasp_averages #(days,ensembles)
 esa_dict['y2']=SEcasp_averages #(days,ensembles)
 esa_dict['y3']=Waus_averages #(days,ensembles)
-pickle.dump(esa_dict,open('xs_and_ys.pkl','wb'))
-
-
-'''
-def construct_array(responses,time,number_of_ensembles,ncells):
-    day=time.strftime('%m/%d')
-    array_of_global_response_variables=np.zeros((len(responses),number_of_ensembles,ncells))
-    paths=np.empty(number_of_ensembles,dtype='object')
-    paths_minus_3_hours=np.empty(number_of_ensembles,dtype='object')
-    for i in range(number_of_ensembles):
-        datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
-        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+datetime+'.nc'
-        paths_minus_3_hours[i]=paths[i][:-22]+str(time-timedelta(days=3))+'.nc' #replaced with 72 hours
-        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(" ", "_")
-        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(":", ".")
-    for i in range(number_of_ensembles):
-        fname=paths[i]
-        fname2=paths_minus_3_hours[i]
-        nc=Dataset(fname)
-        nd=Dataset(fname2)
-        for j in range(len(response_variables)):
-            datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
-            datetime=datetime.replace(" ", "_") #7/27/26 edit: replaced with 72 hour
-            if (response_variables[j]=='rainnc'): #find just a 3 hour integrated time span
-                rainnc_in_the_3_hour_range=(np.squeeze(np.array(nc[response_variables[j]])))-\
-                    (np.squeeze(np.array(nd[response_variables[j]])))
-                array_of_global_response_variables[j,i,:]=rainnc_in_the_3_hour_range
-            else: #finding the average of the response variables over a day
-                sum_over_a_day=np.zeros(ncells)
-                for k in range(8):
-                    hour_step=timedelta(k*3)
-                    itime=time.strptime(datetime,'%Y-%m-%d_%H.%M.%S')
-                    itime+=hour_step
-                    jtime=itime.strftime('%Y-%m-%d_%H.%M.%S')
-                    fname3=fname[:57]+jtime+'.nc'
-                    ne=Dataset(fname3)
-                    array_of_global_response_variables[j,i,:]=(np.squeeze(np.array(ne[response_variables[j]])))
-                    sum_over_a_day+=array_of_global_response_variables[j,i,:]
-                sum_over_a_day/=8
-                array_of_global_response_variables[j,i,:]=sum_over_a_day
-        nc.close()
-        nd.close()
-        ne.close()
-        print('day: '+day)
-        print('ensemble #'+str(i+1))
-    return array_of_global_response_variables'''
+pickle.dump(esa_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/xs_and_ys.pkl','wb'))
