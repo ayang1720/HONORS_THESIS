@@ -1,6 +1,6 @@
 '''
 NOTE: when making different plots, remember to change the name of the files created!
-Creating a time series of MPAS plots
+Creating a time series of MPAS plots NOTE: new update 8/3, trying new smois array
 '''
 #import packages
 import pickle
@@ -25,6 +25,8 @@ time=itime
 #script
 esa_dict=pickle.load(open('ESA.pkl','rb'))
 glaced_smois_array=esa_dict['smois_1d'] #100 smois values
+#NOTE: edited to try the new smois 1d array instead
+glaced_smois_array=esa_dict['smois_1d_new']
 latCell=esa_dict['lat_1d'] #40962 lat cells
 lonCell=esa_dict['lon_1d'] #40962 lon cells
 
@@ -92,9 +94,10 @@ while(time<=ftime):
     axs[2,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_pvalues_for_3_days.png') #changed name for correlations
-    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days.png') #changed name for correlations
+    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days_updated_with_soilmoisture_zeros.png') #changed name for correlations
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations.png') #changed name for correlations
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png') #changed name for correlations
+    #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days.png')
 
     plt.close()
     time+=timedelta(days=1)

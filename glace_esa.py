@@ -18,6 +18,8 @@ Alex Yang Honors Thesis
 
 #did this one already convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*ays.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_pvalues_3_days.gif
 
+#NOTE: this line next convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*ros.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_correlations_3_days_new.gif
+
 #imports
 import pickle
 import numpy as np
@@ -170,11 +172,15 @@ for i in range(number_of_ensembles):
 
 #creates an array of size 100 for each ensemble's glaced smois value
 glaced_smois_array=np.empty(number_of_ensembles,dtype='object')
+glaced_smois_array_new=np.empty(number_of_ensembles,dtype='object')
 for i in range(number_of_ensembles):
     glaced_smois_array[i]=smois_array[i,:][glace_mask]
     glaced_smois_array[i]=np.mean(glaced_smois_array[i][glaced_smois_array[i]!=0])
+    #NOTE: created a new array without masking out nonzero values of smois
+    glaced_smois_array_new[i]=np.mean(glaced_smois_array[i])
 
 esa_dict={}
+esa_dict['smois_1d_new']=glaced_smois_array_new
 esa_dict['smois_1d']=glaced_smois_array #100 smois values
 esa_dict['lat_1d']=latCell #40962 lat cells
 esa_dict['lon_1d']=lonCell #40962 lon cells
