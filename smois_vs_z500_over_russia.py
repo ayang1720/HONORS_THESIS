@@ -44,7 +44,7 @@ lonCell=np.array(nc['lonCell']) #in radians
 latCell*=(180/np.pi) #in degrees
 lonCell*=(180/np.pi) #in degrees
 smois_mask=(latCell>=37)*(latCell<=44)*(lonCell>=360-104)*(lonCell<=360-97)
-russia_mask=(latCell>=65)*(latCell<=90)*(lonCell>=65)*(lonCell<=90) #mask for russia: 65-180 e 65-90 n
+russia_mask=(latCell>=70)*(latCell<=90)*(lonCell>=90)*(lonCell<=120) #mask for russia: 65-180 e 65-90 n
 Wcasp_mask=(latCell>=40)*(latCell<=50)*(lonCell>=30)*(lonCell<=50) #mask for NELC 1: 30-50 e, 40-50 n (W of caspian sea)
 #NOTE: the correlations for NELC 1 and NELC 2 are opposite in sign!
 SEcasp_mask=(latCell>=30)*(latCell<=45)*(lonCell>=50)*(lonCell<=70) #mask for NELC 2: 50-70 e, 30-45 n (SE of caspian sea)
@@ -65,7 +65,7 @@ for i in range(number_of_ensembles):
     nc.close()
     #array of 500 soil moistures, each with ncells=40962
     #array of 500 russia z500s, each with ncells=40962
-#creates an array of size 100 for area averaged smois in CONUS and z500 in russia
+#creates an array of size 500 for area averaged smois in CONUS and z500 in russia
 averaged_smois_array=np.zeros(number_of_ensembles)
 averaged_russia_array=np.zeros(number_of_ensembles)
 for i in range(number_of_ensembles):

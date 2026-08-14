@@ -96,6 +96,8 @@ def cor(X1d,R2d):
     R2d_pert = (R2d.T - R2d_mean).T
     covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
 
+    #test with axis=0 just to see what would happen
+
     std_X = np.std( X1d, ddof=1 )
     std_R = np.std( R2d, ddof=1, axis=-1 )
     correlation = covariance / ( std_X * std_R)

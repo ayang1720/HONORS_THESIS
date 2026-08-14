@@ -94,7 +94,7 @@ while(time<=ftime):
     axs[2,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_pvalues_for_3_days.png') #changed name for correlations
-    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days_updated_with_soilmoisture_zeros.png') #changed name for correlations
+    plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days_updated_with_cor_function_swapped.png') #changed name for correlations
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations.png') #changed name for correlations
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png') #changed name for correlations
     #plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_correlations_for_3_days.png')
