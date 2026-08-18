@@ -4,21 +4,30 @@ Alex Yang's Honors Thesis
 
 import pickle
 import numpy as np
+from datetime import datetime, timedelta
 
 number_of_ensembles=500
 number_of_days=19
+esa_dict=pickle.load(open('/fs/scratch/PAS3252/yang/HONORS_THESIS/x1_and_x2_at_0_utc.pkl','rb'))
 
-esa_dict=pickle.load(open('/fs/scratch/PAS3252/yang/HONORS_THESIS/xs_and_ys.pkl','rb'))
-averaged_smois_array=esa_dict['x1'] #(ensembles)
-averaged_russia_array=esa_dict['x2'] #(ensembles)
-Wcasp_averages=esa_dict['y1'] #(days,ensembles)
-SEcasp_averages=esa_dict['y2'] #(days,ensembles)
-Waus_averages=esa_dict['y3'] #(days,ensembles)
+itime=datetime.strptime('0714','%m%d')
+Wcasp_averages=np.zeros((number_of_days,number_of_ensembles))
+SEcasp_averages=np.zeros((number_of_days,number_of_ensembles))
+Waus_averages=np.zeros((number_of_days,number_of_ensembles))
+for i in range(number_of_days):
+    current_day=itime.strftime('%m%d') #in the form of a string
+    path='/fs/scratch/PAS3252/yang/HONORS_THESIS/xs_and_ys_at_'+current_day+'.pkl'
+    current_dict=pickle.load(open(path,'rb'))
+    Wcasp_averages[i,:]=current_dict['y1']
+    SEcasp_averages[i,:]=current_dict['y2']
+    Waus_averages[i,:]=current_dict['y3']
+    itime+=timedelta(days=1)
+
 x1=esa_dict['x1'] #(ensembles)
 x2=esa_dict['x2'] #(ensembles)
-y1=esa_dict['y1'] #(days,ensembles)
-y2=esa_dict['y2'] #(days,ensembles)
-y3=esa_dict['y3'] #(days,ensembles)
+y1=Wcasp_averages #(days,ensembles)
+y2=SEcasp_averages #(days,ensembles)
+y3=Waus_averages #(days,ensembles)
 
 esa1_dict=pickle.load(open('ESA.pkl','rb'))
 latCell=esa1_dict['lat_1d'] #40962 lat cells
@@ -176,11 +185,11 @@ for i in range(number_of_days):
     axs[1,1].set_title('russia vs secasp, '+day,fontsize=30)
     axs[2,1].set_title('russia vs waus, '+day,fontsize=30)
 
-    plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/day_'+str(i+1)+'_plots_of_xs_and_ys.png')
+    plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/day_'+str(i+1)+'_plots_of_xs_and_ys_utc_0.png')
     plt.close()
     itime+=timedelta(days=1)
 
-#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/*_plots_of_xs_and_ys.png /fs/scratch/PAS3252/yang/HONORS_THESIS/plots_of_xs_and_ys.gif
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/*ys_utc_0.png /fs/scratch/PAS3252/yang/HONORS_THESIS/plots_of_xs_and_ys_at_utc_0.gif
 #saves it to the scratch directory
 
 x1=x1_prime
@@ -225,9 +234,9 @@ for i in range(number_of_days):
     axs[1,1].set_title('russia vs secasp, '+day,fontsize=30)
     axs[2,1].set_title('russia vs waus, '+day,fontsize=30)
 
-    plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/day_'+str(i+1)+'_plots_of_xs_and_ys_primes.png')
+    plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/day_'+str(i+1)+'_plots_of_xs_and_ys_primes_utc_0.png')
     plt.close()
     itime+=timedelta(days=1)
 
-#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/*primes.png /fs/scratch/PAS3252/yang/HONORS_THESIS/plots_of_xs_and_ys_primes.gif
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/*primes_utc_0.png /fs/scratch/PAS3252/yang/HONORS_THESIS/plots_of_xs_and_ys_primes_at_utc_0.gif
 #saves it to the scratch directory

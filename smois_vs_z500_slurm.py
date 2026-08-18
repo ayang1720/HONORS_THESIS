@@ -67,6 +67,8 @@ for i in range(number_of_ensembles):
     SEcasp_averages[i]=sum_over_a_day[1]
     Waus_averages[i]=sum_over_a_day[2]
 
+    print("currently on ensemble number " + str(i+1))
+
     nc.close()
     ne.close()
 

@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=19
 #SBATCH --job-name=pickles
-#SBATCH --account=PAS3252
+#SBATCH --account=PAS2635
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=yang.6726@buckeyemail.osu.edu
 
