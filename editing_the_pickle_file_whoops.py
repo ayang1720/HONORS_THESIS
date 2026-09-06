@@ -1,5 +1,7 @@
 '''
-6/18/26s
+6/18/26
+accidentally made the dictionary in avg_dict size 40962 when it should've been 729
+this py file corrects the mistake by removing the 40233 superfluous elements in avg_dict's array
 '''
 
 import pickle

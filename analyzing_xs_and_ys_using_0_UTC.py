@@ -5,6 +5,7 @@ Alex Yang's Honors Thesis
 import pickle
 import numpy as np
 from datetime import datetime, timedelta
+import pandas as pd
 
 number_of_ensembles=500
 number_of_days=19
@@ -101,6 +102,23 @@ for i in range(number_of_days):
     y2_prime[i,:]=y2[i,:]-gamma[i]*x2
     y3_prime[i,:]=y3[i,:]-delta[i]*x2
 
+data={
+    'x2 vs. y1': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y2': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y3': np.empty(number_of_days,dtype='float')
+}
+
+for i in range(number_of_days):
+    data['x2 vs. y1'][i]=cor2d_correlation(x2,y1_prime[i,:],number_of_ensembles)
+    data['x2 vs. y2'][i]=cor2d_correlation(x2,y2_prime[i,:],number_of_ensembles)
+    data['x2 vs. y3'][i]=cor2d_correlation(x2,y3_prime[i,:],number_of_ensembles)
+
+df=pd.DataFrame(data)
+
+df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+print(df)
+
 print('correlation between x1 and x1 prime')
 print(cor1d_correlation(x1,x1_prime,number_of_ensembles)) #0 if the contribution from russia is zero
 print('correlation of x1 prime and x2')
@@ -128,12 +146,22 @@ print(np.var(x1_prime))
 print('correlation between x1 and x2')
 print(cor1d_correlation(x1,x2,number_of_ensembles))
 
+y1s=np.zeros(number_of_days)
+y2s=np.zeros(number_of_days)
+y3s=np.zeros(number_of_days)
+
 for i in range(number_of_days):
     correlation1=cor2d_correlation(x1_prime,y1_prime[i,:],number_of_ensembles)
     correlation2=cor2d_correlation(x1_prime,y2_prime[i,:],number_of_ensembles)
     correlation3=cor2d_correlation(x1_prime,y3_prime[i,:],number_of_ensembles)
+
+    y1s[i]=correlation1
+    y2s[i]=correlation2
+    y3s[i]=correlation3
+    
     print('for day '+str(i+1)+', correlations:')
     print(correlation1, correlation2, correlation3)
+
 
 #plotting
 
@@ -141,8 +169,49 @@ for i in range(number_of_days):
 import matplotlib.pyplot as plt
 from datetime import datetime,timedelta
 
-itime=datetime.strptime('0714','%m%d')
+x1=np.arange(1,20)
+x2=x1
+y1=y1s
+y2=y2s
+y3=y3s
 
+fig,axs=plt.subplots(nrows=3,ncols=2,constrained_layout=True,figsize=(15,15))
+
+axs[0,0].scatter(x1,y1)
+axs[1,0].scatter(x1,y2)
+axs[2,0].scatter(x1,y3)
+axs[0,1].scatter(x2,y1)
+axs[1,1].scatter(x2,y2)
+axs[2,1].scatter(x2,y3)
+
+axs[0,0].set_xlabel('time',fontsize=24)
+axs[1,0].set_xlabel('time',fontsize=24)
+axs[2,0].set_xlabel('time',fontsize=24)
+
+axs[0,1].set_xlabel('time',fontsize=24)
+axs[1,1].set_xlabel('time',fontsize=24)
+axs[2,1].set_xlabel('time',fontsize=24)
+
+axs[0,0].set_ylabel('x1\' vs y1\'',fontsize=24)
+axs[1,0].set_ylabel('x1\' vs y2\'',fontsize=24)
+axs[2,0].set_ylabel('x1\' vs y3\'',fontsize=24)
+
+axs[0,1].set_ylabel('x2 vs y1\'',fontsize=24)
+axs[1,1].set_ylabel('x2 vs y2\'',fontsize=24)
+axs[2,1].set_ylabel('x2 vs y3\'',fontsize=24)
+
+axs[0,0].set_title('smois vs wcasp',fontsize=30)
+axs[1,0].set_title('smois vs secasp',fontsize=30)
+axs[2,0].set_title('smois vs waus',fontsize=30)
+
+axs[0,1].set_title('russia vs wcasp',fontsize=30)
+axs[1,1].set_title('russia vs secasp',fontsize=30)
+axs[2,1].set_title('russia vs waus',fontsize=30)
+
+plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/time_series_primes_utc_0.png')
+plt.close()
+
+'''
 for i in range(number_of_days):
     day=itime.strftime('%m/%d')
     fig,axs=plt.subplots(nrows=3,ncols=2,constrained_layout=True,figsize=(15,15))
@@ -239,4 +308,4 @@ for i in range(number_of_days):
     itime+=timedelta(days=1)
 
 #convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/*primes_utc_0.png /fs/scratch/PAS3252/yang/HONORS_THESIS/plots_of_xs_and_ys_primes_at_utc_0.gif
-#saves it to the scratch directory
+#saves it to the scratch directory'''

@@ -9,7 +9,7 @@ interest; the variable changes depending on which of the 5 regions you're examin
 8/3: investigated the contribution of zero values of smois to the smois array, and
 started creating the arrays of x1 and x2 (single date used for correlation)
 8/4: created the loop that created arrays for 14 days for y1, y2, y3 and dumped to pickle
-8/5: created the piclke file, saved to scratch directory
+8/5: created the pickle file, saved to scratch directory
 '''
 
 #copied the pickle file produced to the scratch directory
