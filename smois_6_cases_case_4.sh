@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --cluster=pitzer
+#SBATCH --time=1:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=19
+#SBATCH --job-name=pickles4
+#SBATCH --account=PAS2635
+#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-user=yang.6726@osu.edu
+
+export times="20210714000000 20210715000000 20210716000000 20210717000000 20210718000000 20210719000000 \
+	           20210720000000 20210721000000 20210722000000 20210723000000 20210724000000 20210725000000 \
+               20210726000000 20210727000000 20210728000000 20210729000000 20210730000000 20210731000000 \
+               20210801000000"
+for time in ${times}
+do
+    echo ${time}
+    python plot_glace_case_4.py ${time} 3 > ${time}_log &
+done
+wait

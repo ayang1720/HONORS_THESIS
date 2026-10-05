@@ -1,0 +1,66 @@
+0
+1
+2
+3
+4
+5
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    ne=Dataset(fname3)
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    ne=Dataset(fname3)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    ne=Dataset(fname3)
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-05_21.00.00.nc'

@@ -1,0 +1,47 @@
+20210714000000
+20210715000000
+20210716000000
+20210717000000
+20210718000000
+20210719000000
+20210720000000
+20210721000000
+20210722000000
+20210723000000
+20210724000000
+20210725000000
+20210726000000
+20210727000000
+20210728000000
+20210729000000
+20210730000000
+20210731000000
+20210801000000
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+EOFError: Ran out of input
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+EOFError: Ran out of input
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+EOFError: Ran out of input
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+_pickle.UnpicklingError: invalid load key, '\x00'.
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+_pickle.UnpicklingError: invalid load key, '\x00'.
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_6.py", line 38, in <module>
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+_pickle.UnpicklingError: invalid load key, '\x00'.
+    esa_dict=pickle.load(open('ESA.pkl','rb'))
+EOFError: Ran out of input

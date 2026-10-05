@@ -1,0 +1,30 @@
+0
+1
+2
+3
+4
+5
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+    path=path+directories[run_number]+'/'
+    path=path+directories[run_number]+'/'
+    path=path+directories[run_number]+'/'
+Traceback (most recent call last):
+Traceback (most recent call last):
+TypeError: list indices must be integers or slices, not str
+TypeError: list indices must be integers or slices, not str
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+TypeError: list indices must be integers or slices, not str
+    path=path+directories[run_number]+'/'
+    path=path+directories[run_number]+'/'
+TypeError: list indices must be integers or slices, not str
+TypeError: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 20, in <module>
+    path=path+directories[run_number]+'/'
+TypeError: list indices must be integers or slices, not str

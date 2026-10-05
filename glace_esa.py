@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 from scipy.stats import beta, false_discovery_control
 
 #settings
-number_of_ensembles=100
+number_of_ensembles=500
 ncells=40962
 response_variables=['height_500hPa','height_250hPa','rainnc','t2m','q2']
 smois_start_time=datetime.strptime('20210714210000','%Y%m%d%H%M%S') #7/14/21 at 21Z
@@ -88,7 +88,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
 #correlation: a 1d array representing correlation between X/R -> all values between -1 and 1
 #note that for rainnc, certain values have been masked out, so array might have size ~39281
 
-def cor(X1d,R2d):
+def cor_cor(X1d,R2d):
     number_of_ensembles = len(X1d)
     X1d_mean=np.mean(X1d)
     R2d_mean=np.mean(R2d, axis=-1)
@@ -106,6 +106,27 @@ def cor(X1d,R2d):
 
     #flag_keep=np.invert(np.isnan(correlation)) #NOTE edited out 7/27 for correlations instead of pvalues
     #correlation=correlation[flag_keep] #these two lines get commented out for correlations
+
+    return correlation
+
+def cor_pvalues(X1d,R2d):
+    number_of_ensembles = len(X1d)
+    X1d_mean=np.mean(X1d)
+    R2d_mean=np.mean(R2d, axis=-1)
+    X1d_pert = X1d - X1d_mean
+    R2d_pert = (R2d.T - R2d_mean).T
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+
+    #test with axis=0 just to see what would happen
+
+    std_X = np.std( X1d, ddof=1 )
+    std_R = np.std( R2d, ddof=1, axis=-1 )
+    correlation = covariance / ( std_X * std_R)
+
+    correlation=np.array(correlation,dtype=float)
+
+    flag_keep=np.invert(np.isnan(correlation)) #NOTE edited out 7/27 for correlations instead of pvalues
+    correlation=correlation[flag_keep] #these two lines get commented out for correlations
 
     return correlation
 
@@ -131,21 +152,37 @@ def significant_cells(pvalues,lons,lats):
 
 #input: glaced smois array, 1d array of only response variables, datetime of the simulation, number of ensembles, ncells
 #output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
-def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
+def glace_esa_correlations(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
     global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
     correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
-    #pvalues=np.zeros((len(response_variables),ncells)) #commented out for correlations
+    pvalues=np.zeros((len(response_variables),ncells)) #commented out for correlations
     for i in range(len(response_variables)):
         global_arrays_2d=global_arrays[i,:,:]
         transposed_global_arrays=global_arrays_2d.T
-        ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
-        correlations[i,:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+        ncells_for_this_response=cor_cor(glaced_smois_array,transposed_global_arrays).size
+        correlations[i,:ncells_for_this_response]=cor_cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
 
-    #pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
     #don't compute pvalues for correlations
 
-    return correlations #replaced with the correlations, removed the line that flags nan vlaues NOTE edit 7/27
-    #return pvalues #this gets replaced when doing correlations
+    #return correlations #replaced with the correlations, removed the line that flags nan vlaues NOTE edit 7/27
+    return pvalues #this gets replaced when doing correlations
+
+#input: glaced smois array, 1d array of only response variables, datetime of the simulation, number of ensembles, ncells
+#output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
+def glace_esa_pvalues(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
+    pvalues=np.zeros((len(response_variables),ncells)) #commented out for correlations
+    for i in range(len(response_variables)):
+        global_arrays_2d=global_arrays[i,:,:]
+        transposed_global_arrays=global_arrays_2d.T
+        ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+        correlations[i,:ncells_for_this_response]=cor_pvalues(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    #don't compute pvalues for correlations
+    #return correlations #replaced with the correlations, removed the line that flags nan vlaues NOTE edit 7/27
+    return pvalues #this gets replaced when doing correlations
 
 #script
 

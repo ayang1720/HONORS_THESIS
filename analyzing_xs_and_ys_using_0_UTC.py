@@ -92,6 +92,71 @@ beta=cor2d_regcoef(y1,x2,number_of_ensembles)
 gamma=cor2d_regcoef(y2,x2,number_of_ensembles)
 delta=cor2d_regcoef(y3,x2,number_of_ensembles)
 
+#Dataframe for x1 vs unprimed varirables
+data={
+    'x1 vs. y1': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y2': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y3': np.empty(number_of_days,dtype='float')
+}
+
+for i in range(number_of_days):
+    data['x1 vs. y1'][i]=cor2d_correlation(x1,y1[i,:],number_of_ensembles)
+    data['x1 vs. y2'][i]=cor2d_correlation(x1,y2[i,:],number_of_ensembles)
+    data['x1 vs. y3'][i]=cor2d_correlation(x1,y3[i,:],number_of_ensembles)
+
+df=pd.DataFrame(data)
+
+df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+print(df)
+
+#Dataframe for x1 vs prime variables
+
+y1_prime=np.zeros((19,number_of_ensembles))
+y2_prime=np.zeros((19,number_of_ensembles))
+y3_prime=np.zeros((19,number_of_ensembles))
+
+for i in range(number_of_days):
+    y1_prime[i,:]=y1[i,:]-beta[i]*x2
+    y2_prime[i,:]=y2[i,:]-gamma[i]*x2
+    y3_prime[i,:]=y3[i,:]-delta[i]*x2
+
+data={
+    'x1 vs. y1_prime': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y2_prime': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y3_prime': np.empty(number_of_days,dtype='float')
+}
+
+for i in range(number_of_days):
+    data['x1 vs. y1_prime'][i]=cor2d_correlation(x1,y1_prime[i,:],number_of_ensembles)
+    data['x1 vs. y2_prime'][i]=cor2d_correlation(x1,y2_prime[i,:],number_of_ensembles)
+    data['x1 vs. y3_prime'][i]=cor2d_correlation(x1,y3_prime[i,:],number_of_ensembles)
+
+df=pd.DataFrame(data)
+
+df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+print(df)
+
+#Dataframe for x2 vs unprimed varirables
+data={
+    'x2 vs. y1': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y2': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y3': np.empty(number_of_days,dtype='float')
+}
+
+for i in range(number_of_days):
+    data['x2 vs. y1'][i]=cor2d_correlation(x2,y1[i,:],number_of_ensembles)
+    data['x2 vs. y2'][i]=cor2d_correlation(x2,y2[i,:],number_of_ensembles)
+    data['x2 vs. y3'][i]=cor2d_correlation(x2,y3[i,:],number_of_ensembles)
+
+df=pd.DataFrame(data)
+
+df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+print(df)
+
+#Dataframe for x2 vs primed variables
 y1_prime=np.zeros((19,number_of_ensembles))
 y2_prime=np.zeros((19,number_of_ensembles))
 y3_prime=np.zeros((19,number_of_ensembles))
@@ -103,15 +168,15 @@ for i in range(number_of_days):
     y3_prime[i,:]=y3[i,:]-delta[i]*x2
 
 data={
-    'x2 vs. y1': np.empty(number_of_days,dtype='float'),
-    'x2 vs. y2': np.empty(number_of_days,dtype='float'),
-    'x2 vs. y3': np.empty(number_of_days,dtype='float')
+    'x2 vs. y1_prime': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y2_prime': np.empty(number_of_days,dtype='float'),
+    'x2 vs. y3_prime': np.empty(number_of_days,dtype='float')
 }
 
 for i in range(number_of_days):
-    data['x2 vs. y1'][i]=cor2d_correlation(x2,y1_prime[i,:],number_of_ensembles)
-    data['x2 vs. y2'][i]=cor2d_correlation(x2,y2_prime[i,:],number_of_ensembles)
-    data['x2 vs. y3'][i]=cor2d_correlation(x2,y3_prime[i,:],number_of_ensembles)
+    data['x2 vs. y1_prime'][i]=cor2d_correlation(x2,y1_prime[i,:],number_of_ensembles)
+    data['x2 vs. y2_prime'][i]=cor2d_correlation(x2,y2_prime[i,:],number_of_ensembles)
+    data['x2 vs. y3_prime'][i]=cor2d_correlation(x2,y3_prime[i,:],number_of_ensembles)
 
 df=pd.DataFrame(data)
 
@@ -159,10 +224,179 @@ for i in range(number_of_days):
     y2s[i]=correlation2
     y3s[i]=correlation3
     
-    print('for day '+str(i+1)+', correlations:')
+    print('for day '+str(i+1)+', correlations between x1 prime and y primes:')
+    print(correlation1, correlation2, correlation3)
+
+for i in range(number_of_days):
+    correlation1=cor2d_correlation(x1_prime,y1[i,:],number_of_ensembles)
+    correlation2=cor2d_correlation(x1_prime,y2[i,:],number_of_ensembles)
+    correlation3=cor2d_correlation(x1_prime,y3[i,:],number_of_ensembles)
+
+    y1s[i]=correlation1
+    y2s[i]=correlation2
+    y3s[i]=correlation3
+    
+    print('for day '+str(i+1)+', correlations between x1 prime and ys:')
     print(correlation1, correlation2, correlation3)
 
 
+#find the regression coefficients with contribution from smois removed as sanity check
+#regression coefficients
+beta_star=cor2d_regcoef(y1,x1,number_of_ensembles)
+gamma_star=cor2d_regcoef(y2,x1,number_of_ensembles)
+delta_star=cor2d_regcoef(y3,x1,number_of_ensembles)
+
+#Dataframe for x2 vs primed variables
+y1_star=np.zeros((19,number_of_ensembles))
+y2_star=np.zeros((19,number_of_ensembles))
+y3_star=np.zeros((19,number_of_ensembles))
+#primes
+for i in range(number_of_days):
+    y1_star[i,:]=y1[i,:]-beta_star[i]*x1
+    y2_star[i,:]=y2[i,:]-gamma_star[i]*x1
+    y3_star[i,:]=y3[i,:]-delta_star[i]*x1
+
+data={
+    'x1 vs. y1_star': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y2_star': np.empty(number_of_days,dtype='float'),
+    'x1 vs. y3_star': np.empty(number_of_days,dtype='float')
+}
+
+for i in range(number_of_days):
+    data['x1 vs. y1_star'][i]=cor2d_correlation(x1,y1_star[i,:],number_of_ensembles)
+    data['x1 vs. y2_star'][i]=cor2d_correlation(x1,y2_star[i,:],number_of_ensembles)
+    data['x1 vs. y3_star'][i]=cor2d_correlation(x1,y3_star[i,:],number_of_ensembles)
+
+df=pd.DataFrame(data)
+
+df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+print(df)
+
+#inputs:
+#x1 smois 1d
+#x2 z500 1d
+#y1 z500 2d
+#y2 z500 2d
+#y3 z500 2d
+#type can be 1, 2, 3, or 4
+#case 1: x1 vs unprimed ys
+#case 2: x1 vs primed ys
+#case 3: x2 vs unprimed ys
+#case 4: x2 vs primed ys
+
+#type2 can be 1 or 2
+#case 1: primes (remove contribution from x2)
+#case 2: stars (remove contribution from x1)
+
+#output:
+#prints a dataframe
+def turn_into_dataframe(x1,x2,y1,y2,y3,type,type2):
+    possibiltiies=[(False,False),(False,True),(True,False),(True,True)]
+    prime_or_star=[(True),(False)]
+    is_it_prime=prime_or_star[type2-1]
+    is_it_x2,is_it_primed=possibiltiies[type-1]
+    print('is it x2')
+    print(is_it_x2)
+    print('is it primed')
+    print(is_it_primed)
+    print('is it prime')
+    print(is_it_prime)
+
+    #Dataframe for x2 vs primed variables
+    y1_star=np.zeros((19,number_of_ensembles))
+    y2_star=np.zeros((19,number_of_ensembles))
+    y3_star=np.zeros((19,number_of_ensembles))
+    #primes
+    if is_it_prime:
+        #regression coefficients
+        beta_star=cor2d_regcoef(y1,x2,number_of_ensembles)
+        gamma_star=cor2d_regcoef(y2,x2,number_of_ensembles)
+        delta_star=cor2d_regcoef(y3,x2,number_of_ensembles)
+        for i in range(number_of_days):
+            y1_star[i,:]=y1[i,:]-beta_star[i]*x2
+            y2_star[i,:]=y2[i,:]-gamma_star[i]*x2
+            y3_star[i,:]=y3[i,:]-delta_star[i]*x2
+        suffix='_prime'
+    if is_it_prime==False:
+        #regression coefficients
+        beta_star=cor2d_regcoef(y1,x1,number_of_ensembles)
+        gamma_star=cor2d_regcoef(y2,x1,number_of_ensembles)
+        delta_star=cor2d_regcoef(y3,x1,number_of_ensembles)
+        for i in range(number_of_days):
+            y1_star[i,:]=y1[i,:]-beta_star[i]*x1
+            y2_star[i,:]=y2[i,:]-gamma_star[i]*x1
+            y3_star[i,:]=y3[i,:]-delta_star[i]*x1
+        suffix='_star'
+
+    if is_it_x2:
+        which_x='x2'
+    if is_it_x2==False:
+        which_x='x1'
+
+    if is_it_primed:
+        suffix=suffix
+    if is_it_primed==False:
+        suffix=''
+    
+    data={
+        which_x+' vs. y1'+suffix: np.empty(number_of_days,dtype='float'),
+        which_x+' vs. y2'+suffix: np.empty(number_of_days,dtype='float'),
+        which_x+' vs. y3'+suffix: np.empty(number_of_days,dtype='float')
+    }
+
+    if is_it_primed==False:
+        y1_star=y1
+        y2_star=y2
+        y3_star=y3
+
+    if is_it_x2==False:
+        for i in range(number_of_days):
+            data[which_x+' vs. y1'+suffix][i]=cor2d_correlation(x1,y1_star[i,:],number_of_ensembles)
+            data[which_x+' vs. y2'+suffix][i]=cor2d_correlation(x1,y2_star[i,:],number_of_ensembles)
+            data[which_x+' vs. y3'+suffix][i]=cor2d_correlation(x1,y3_star[i,:],number_of_ensembles)
+
+    if is_it_x2==True:
+        for i in range(number_of_days):
+            data[which_x+' vs. y1'+suffix][i]=cor2d_correlation(x2,y1_star[i,:],number_of_ensembles)
+            data[which_x+' vs. y2'+suffix][i]=cor2d_correlation(x2,y2_star[i,:],number_of_ensembles)
+            data[which_x+' vs. y3'+suffix][i]=cor2d_correlation(x2,y3_star[i,:],number_of_ensembles)
+
+    df=pd.DataFrame(data)
+
+    df.index=['Day ' + str(i) for i in range(1,len(df)+1)] #got some help from ChatGPT for this one
+
+    print(df)
+
+#type can be 1, 2, 3, or 4
+#case 1: x1 vs unprimed ys
+#case 2: x1 vs primed ys
+#case 3: x2 vs unprimed ys
+#case 4: x2 vs primed ys
+
+#type2 can be 1 or 2
+#case 1: primes (remove contribution from x2)
+#case 2: stars (remove contribution from x1)
+
+print('x1 vs unprimed')
+turn_into_dataframe(x1,x2,y1,y2,y3,1,1)
+print('x1 vs primed primes')
+turn_into_dataframe(x1,x2,y1,y2,y3,2,1)
+print('x2 vs unprimed')
+turn_into_dataframe(x1,x2,y1,y2,y3,3,1)
+print('x2 vs primed primes')
+turn_into_dataframe(x1,x2,y1,y2,y3,4,1)
+print('x1 vs unprimed')
+turn_into_dataframe(x1,x2,y1,y2,y3,1,2)
+print('x1 vs primed stars')
+turn_into_dataframe(x1,x2,y1,y2,y3,2,2)
+print('x2 vs unprimed')
+turn_into_dataframe(x1,x2,y1,y2,y3,3,2)
+print('x2 vs primed stars')
+turn_into_dataframe(x1,x2,y1,y2,y3,4,2)
+#uncomment the print(df) statement in the function
+
+'''
 #plotting
 
 #import packages
@@ -209,7 +443,7 @@ axs[1,1].set_title('russia vs secasp',fontsize=30)
 axs[2,1].set_title('russia vs waus',fontsize=30)
 
 plt.savefig('/fs/scratch/PAS3252/yang/HONORS_THESIS/time_series_primes_utc_0.png')
-plt.close()
+plt.close()'''
 
 '''
 for i in range(number_of_days):

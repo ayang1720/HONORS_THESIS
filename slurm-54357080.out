@@ -1,0 +1,54 @@
+0
+1
+2
+3
+4
+5
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace.py", line 46, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 180, in glace_esa_pvalues
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
+    ncells_for_this_response=cor_pvalues(glaced_smois_array,transposed_global_arrays).size
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 118, in cor_pvalues
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
+    covariance = np.sum( X1d_pert * R2d_pert, axis=-1) / (number_of_ensembles-1)
+ValueError: operands could not be broadcast together with shapes (500,) (40962,100) 
