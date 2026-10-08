@@ -5,6 +5,9 @@ Alex Yang Honors Thesis
 /fs/scratch/PAS3252/yang/HONORS_THESIS
 '''
 
+#10/5/26 gif generation:
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/*.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/6_cases_time_series.gif
+
 #the more recent files have 3 days integration, the ones before it had 3 hours integration, both are correlations
 
 #did this one already -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/*00.png /users/PAS3252/ayang1720/HONORS_THESIS/time_series_july_to_august_pvalues_3_hours.gif
@@ -64,7 +67,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
             else: #finding the average of the response variables over a day
                 sum_over_a_day=np.zeros(ncells)
                 for k in range(8):
-                    hour_step=timedelta(k*3)
+                    hour_step=timedelta(hours=k*3) #added hours here
                     itime=time.strptime(datetime,'%Y-%m-%d_%H.%M.%S')
                     itime+=hour_step
                     jtime=itime.strftime('%Y-%m-%d_%H.%M.%S')

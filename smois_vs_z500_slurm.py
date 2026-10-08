@@ -3,6 +3,8 @@ Alex Yang's Honors Thesis
 NOTE: the original smois and russia arrays still use the 21-UTC time, instead of the new 0-UTC standard
 '''
 
+#NOTE: edited the masks for the 3 locations to be a little more focused in
+
 #imports
 from netCDF4 import Dataset
 import numpy as np
@@ -26,9 +28,12 @@ lonCell=np.array(nc['lonCell']) #in radians
 latCell*=(180/np.pi) #in degrees
 lonCell*=(180/np.pi) #in degrees
 Wcasp_mask=(latCell>=40)*(latCell<=50)*(lonCell>=30)*(lonCell<=50) #mask for NELC 1: 30-50 e, 40-50 n (W of caspian sea)
+Wcasp_mask=(latCell>=45)*(latCell<=50)*(lonCell>=30)*(lonCell<=40)
 #NOTE: the correlations for NELC 1 and NELC 2 are opposite in sign!
 SEcasp_mask=(latCell>=30)*(latCell<=45)*(lonCell>=50)*(lonCell<=70) #mask for NELC 2: 50-70 e, 30-45 n (SE of caspian sea)
+SEcasp_mask=(latCell>=30)*(latCell<=40)*(lonCell>=55)*(lonCell<=65)
 Waus_mask=(latCell>=-25)*(latCell<=-15)*(lonCell>=90)*(lonCell<=110) #mask for Waus: 15-25 s, 90-110 e
+Waus_mask=(latCell>=-25)*(latCell<=-15)*(lonCell>=95)*(lonCell<=105)
 
 #script
 

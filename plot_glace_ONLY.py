@@ -55,54 +55,46 @@ axs[1,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 axs[2,0].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 axs[2,1].set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
 
+case=1
+lons,lats=lonCell,latCell
+
 for x in xs:
-    case=1
     print("currently on case: " + str(case))
     pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
 
-    #edit on 7/27 to plot correlations instead of pvalues
-    lons=lonCell
-    lats=latCell
-    number_of_statistically_significant=""
+    statgood=pvalues[0]
 
-    #NOTE: chanegd limits vmin and vmax for correlations instead of pvalues
     if case==1:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[0,0].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[0,0].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[0,0])
     if case==2:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[0,1].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[0,1].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[0,1])
     if case==3:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[1,0].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[1,0].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[1,0])
     if case==4:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[1,1].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[1,1].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[1,1])
     if case==5:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[2,0].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[2,0].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[2,0])
     if case==6:
-        statgood,lons,lats=glace_esa.significant_cells(pvalues[0],lonCell,latCell)
         axs[2,1].set_title('Smois on 7/14 vs. '+response_variables[0,0]+' on '+time.strftime('%m/%d')+', Case #'+str(case),fontsize=18)
         sc=axs[2,1].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
                         cmap='plasma',transform=ccrs.PlateCarree(),extend='both')
         fig.colorbar(sc,ax=axs[2,1])
 
     case+=1
-plt.savefig(path+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png')
+plt.savefig(path+time.strftime('%Y-%m-%d')+'.png')
 plt.close()

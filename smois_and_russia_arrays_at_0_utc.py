@@ -14,6 +14,10 @@ started creating the arrays of x1 and x2 (single date used for correlation)
 
 #copied the pickle file produced to the scratch directory
 
+#NOTE:
+#edited: russia_mask=(latCell>=70)*(latCell<=90)*(lonCell>=90)*(lonCell<=120) into
+#russia_mask=(latCell>=70)*(latCell<=80)*(lonCell>=80)*(lonCell<=100)
+
 '''
 Notes to self:
 -area average the variables (z500, z250) in those boxes; correlations with 500 ensemble members
@@ -41,7 +45,7 @@ lonCell=np.array(nc['lonCell']) #in radians
 latCell*=(180/np.pi) #in degrees
 lonCell*=(180/np.pi) #in degrees
 smois_mask=(latCell>=37)*(latCell<=44)*(lonCell>=360-104)*(lonCell<=360-97)
-russia_mask=(latCell>=70)*(latCell<=90)*(lonCell>=90)*(lonCell<=120) #mask for russia, newly edited
+russia_mask=(latCell>=70)*(latCell<=80)*(lonCell>=80)*(lonCell<=100)
 
 #script
 

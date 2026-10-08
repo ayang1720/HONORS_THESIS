@@ -21,3 +21,191 @@ Traceback (most recent call last):
   File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 38, in <module>
     esa_dict=pickle.load(open('ESA.pkl','rb'))
 EOFError: Ran out of input
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00224/diag.2021-08-22_00.00.00.nc'
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-08_00.00.00.nc'
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-08_00.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-08_00.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-08_00.00.00.nc'
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+Traceback (most recent call last):
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+Traceback (most recent call last):
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 61, in <module>
+    pvalues=glace_esa.glace_esa_pvalues(x,response_variables2[:-1],time,number_of_ensembles,ncells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 174, in glace_esa_pvalues
+    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/glace_esa.py", line 72, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-06_00.00.00.nc'
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 73, in <module>
+    sc=axs[0,0].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 270, in tricontourf
+    return TriContourSet(ax, *args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 29, in __init__
+    super().__init__(ax, *args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/contour.py", line 813, in __init__
+    kwargs = self._process_args(*args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 45, in _process_args
+    tri, z = self._contour_args(args, kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 59, in _contour_args
+    raise ValueError('z array must have same length as triangulation x'
+ValueError: z array must have same length as triangulation x and y arrays
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/plot_glace_case_5.py", line 73, in <module>
+    sc=axs[0,0].tricontourf(lons,lats,statgood,np.linspace(0,0.1,11),\
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 270, in tricontourf
+    return TriContourSet(ax, *args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 29, in __init__
+    super().__init__(ax, *args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/contour.py", line 813, in __init__
+    kwargs = self._process_args(*args, **kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 45, in _process_args
+    tri, z = self._contour_args(args, kwargs)
+  File "/users/PAS3252/ayang1720/.local/lib/python3.9/site-packages/matplotlib/tri/_tricontour.py", line 59, in _contour_args
+    raise ValueError('z array must have same length as triangulation x'
+ValueError: z array must have same length as triangulation x and y arrays
