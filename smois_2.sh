@@ -14,6 +14,6 @@ export times="20210721000000 20210722000000 20210723000000 20210724000000 202107
 for time in ${times}
 do
     echo "Starting ${time}"
-    python plot_glace_ONLY.py ${time} > ${time}_log 2>&1
+    python plot_glace_ONLY_heights_only.py ${time} > ${time}_log 2>&1
     echo "Finished ${time}"
 done

@@ -167,4 +167,4 @@ esa_dict['correlations']=correlations
 esa_dict['smois_smois_correlation']=smois_smois_correlation
 for i in range(len(response_variables)):
     esa_dict[response_variables[i]]=(conusify(global_arrays[i,:,:],land_mask,conus_mask))
-pickle.dump(esa_dict,open('ESA.pkl','wb'))
+pickle.dump(esa_dict,open('ESA_with_100_members.pkl','wb'))

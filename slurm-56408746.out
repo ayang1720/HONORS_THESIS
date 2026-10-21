@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/create_pickle_file_of_global_arrays.py", line 56, in <module>
+    statgood_dict['global_array']=construct_array(time,500,40962,'timedelta_days')
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/create_pickle_file_of_global_arrays.py", line 30, in construct_array
+    ne=Dataset(fname3)
+  File "src/netCDF4/_netCDF4.pyx", line 2521, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 2158, in netCDF4._netCDF4._ensure_nc_success
+FileNotFoundError: [Errno 2] No such file or directory: '/fs/ess/PAS2635/LandAir_Predictability/member_00455/diag.2021-08-07_00.00.00.nc'

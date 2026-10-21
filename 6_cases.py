@@ -1,25 +1,11 @@
-'''
-Alex Yang's Honors Thesis
-Top Layer vs. Bottom Layer Soil
-Great Plains, California, Florida
-'''
-
-'''
-edit log:
-9/6/26: just finished writing the script that turns inputs into smois and russia arrays for given layer/location
-'''
-
 #imports
 from netCDF4 import Dataset
 import numpy as np
-import sys
 import pickle
 
 #settings
 layers=[0,-1]
-#layer=layers[sys.argv[1]] #a number 0 or -1; 0 for top layer, -1 for bottom layer
 locations=['great plains','california','florida']
-#location=sys.argv[2] #a number 0, 1, or 2; corresponds to the array indices above
 
 ncells=40962
 number_of_ensembles=500
@@ -39,7 +25,6 @@ florida_mask=(latCell>=24.4)*(latCell<=31)*(lonCell>=360-87.6)*(lonCell<=360-80)
 masks=[great_plains_mask,california_mask,florida_mask]
 
 russia_mask=(latCell>=70)*(latCell<=90)*(lonCell>=90)*(lonCell<=120)
-#smois_mask=masks[location]
 
 def create_smois_array(layer_number,location_number):
     print('currently on: ' + str(layer_number) + "," + str(location_number))
@@ -65,9 +50,6 @@ def create_smois_array(layer_number,location_number):
     
     return averaged_smois_array, averaged_russia_array
 
-#layer=layers[sys.argv[1]] #a number 0 or -1; 0 for top layer, -1 for bottom layer
-#locations=['great plains','california','florida']
-#location=sys.argv[2] #a number 0, 1, or 2; corresponds to the array indices above
 xs_dict={}
 x,x2=create_smois_array(0,0)
 xs_dict['x2']=x2
