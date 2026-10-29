@@ -1,4 +1,11 @@
 '''
+this script must be run by a slurm script
+creates 3 pickle files for y1, y2, y3 with size (ensembles), which are dumped to the scratch directory
+three slurm scripts, where each slurm script runs 1/3rd of the 19 days
+the average over a day 
+'''
+
+'''
 Alex Yang's Honors Thesis
 NOTE: the original smois and russia arrays still use the 21-UTC time, instead of the new 0-UTC standard
 '''

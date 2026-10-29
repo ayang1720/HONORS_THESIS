@@ -1,0 +1,140 @@
+'''
+Old script, from over the summer; dumps pickle file, ESA.pkl containing
+all 5 response variables' cells over the entire 40962 cell grid
+this is an obsolete version of the script, with a broken conusify function (fixed in
+the "_with_glace.py" version of the script in the same folder)
+'''
+
+'''
+Alex Yang Honors Thesis Task 5 SU26
+/users/PAS3252/ayang1720/HONORS_THESIS
+/fs/ess/PAS2635/LandAir_Predictability
+/fs/scratch/PAS3252/yang/HONORS_THESIS
+'''
+
+#imports
+import pickle
+import numpy as np
+from netCDF4 import Dataset
+
+#settings
+number_of_ensembles=100
+ncells=40962
+response_variables=['z500','z250','rainnc','t2m','q2']
+response_variables=['height_500hPa','height_250hPa','rainnc','t2m','q2']
+
+#input: array of response variables names, that get pulled from the .nc file for august 1st
+#output: array containing 100 ensemble runs of 40962 grid cells for each of the (in this case) 5 response variables
+def construct_array(responses):
+    array_of_global_response_variables=np.zeros((len(responses),number_of_ensembles,ncells))
+    paths=np.empty(number_of_ensembles,dtype='object')
+    paths_minus_3_hours=np.empty(number_of_ensembles,dtype='object')
+    for i in range(number_of_ensembles):
+        paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.2021-08-01_21.00.00.nc'
+        paths_minus_3_hours[i]=paths[i][:-16]+'8-01_18.00.00.nc'
+    for i in range(number_of_ensembles):
+        fname=paths[i]
+        fname2=paths_minus_3_hours[i]
+        nc=Dataset(fname)
+        nd=Dataset(fname2)
+        for j in range(len(response_variables)):
+            if (response_variables[j]=='rainnc'):
+                rainnc_in_the_3_hour_range=(np.squeeze(np.array(nc[response_variables[j]])))-\
+                    (np.squeeze(np.array(nd[response_variables[j]])))
+                array_of_global_response_variables[j,i,:]=rainnc_in_the_3_hour_range
+            else:
+                array_of_global_response_variables[j,i,:]=(np.squeeze(np.array(nc[response_variables[j]])))
+            #array of z500 heights, each with ncells=40962
+            #array of z250 heights, each with ncells=40962
+            #array of cumulative precipitation in mm, each with ncells=40962
+            #array of 2 meter temperature K, each with ncells=40962
+            #array of 2 meter specific humidity kg/kg, each with ncells=40962
+        nc.close()
+        print('ensemble #'+str(i+1))
+    return array_of_global_response_variables
+
+#input: array of some meterological variable with shape (ensemble,ncells)
+#output: an area averaged array of only the land over CONUS (ensemble)
+def conusify(array_to_be_conusified,land_mask,conus_mask):
+    conusified_array=np.zeros(number_of_ensembles)
+    for i in range(number_of_ensembles):
+        array_to_be_conusified[i,:]*=land_mask*conus_mask
+        conusified_array[i]=\
+        array_to_be_conusified[i][array_to_be_conusified[i]!=0].mean()
+    return conusified_array
+
+#input:
+#X: (soil moisture array of 100 values on july 14th)
+#R: (atmosphericic state of 100 values on august 1st)
+#output:
+#covariance: (a single scalar value representing covariance between X/R)
+def cov(X,R):
+    X_mean=np.mean(X)
+    #print(X_mean)
+    R_mean=np.mean(R)
+    #print(R_mean)
+    summation=0
+    for i in range(number_of_ensembles):
+        summation+=(X[i]-X_mean)*(R[i]-R_mean)
+    #print(summation)
+    covariance=summation/(number_of_ensembles-1)
+    return covariance
+
+#input: array of response variables
+#output: array of correlations between the response variable and the soil moisture
+def turn_response_variables_into_correlation_array(global_states_array,conus_smois,var_conus_smois,land_mask,conus_mask,number_of_ensembles):
+    correlations_array=np.zeros((global_states_array.shape[0]))
+    conusify_array=np.zeros((number_of_ensembles,global_states_array.shape[0]))
+    for i in range(len(global_states_array)): #loop over every response variable
+        conusify_array[:,i]=conusify(global_states_array[i],land_mask,conus_mask)
+        correlations_array[i]=cov(conus_smois,conusify_array[:,i])\
+        /np.sqrt(var_conus_smois)/np.sqrt(np.var(conusify_array[:,i],ddof=1))
+    return correlations_array
+
+#script
+
+#constructing the CONUS mask and land mask
+fname='/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/history.2025-10-01_06.00.00.nc'
+nc=Dataset(fname)
+latCell=np.array(nc['latCell']) #in radians
+lonCell=np.array(nc['lonCell']) #in radians
+latCell*=(180/np.pi) #in degrees
+lonCell*=(180/np.pi) #in degrees
+conus_mask=(latCell>=24.5)*(latCell<=49.4)*(lonCell>=(360-124.8))*(lonCell<=(360-66.9))
+fname='/fs/ess/PAS2635/Generalized_Predictability_MPAS/120km_uniform/x1.40962.init.nc'
+nc=Dataset(fname)
+land_mask=np.squeeze(np.array(nc['landmask']))
+
+#constructing the soil moisture array for the entire globe on july 14th
+paths=np.empty(number_of_ensembles,dtype='object')
+for i in range(number_of_ensembles):
+    paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.2021-07-14_21.00.00.nc'
+smois_array=np.zeros((number_of_ensembles,ncells))
+for i in range(number_of_ensembles):
+    fname=paths[i]
+    nc=Dataset(fname)
+    smois_array[i,:]=(np.squeeze(np.array(nc['smois'])))[:,0]
+    nc.close()
+    #array of soil moistures, each with ncells=40962
+
+#conus_smois is an array of length 100 containing the area averaged smois
+#for the contiguous united states; 1 for each of the 100 ensemble members
+conus_smois=(conusify(smois_array,land_mask,conus_mask))
+var_conus_smois=np.var(conus_smois,ddof=1)
+
+#constructing the atmospheric state array for the entire globe on aug 1 (100 arrays of 40962 cells each)
+#global_arrays=np.zeros((len(response_variables),number_of_ensembles,ncells))
+global_arrays=construct_array(response_variables) #shape: (# of responses, 100 ensembles, 40962 cells)
+correlations=\
+    turn_response_variables_into_correlation_array(global_arrays,conus_smois,var_conus_smois,land_mask,conus_mask,number_of_ensembles)
+
+for i in range(len(correlations)):
+    print("The correlation between smois and "+response_variables[i]+": "+str(correlations[i]))
+
+esa_dict={}
+esa_dict['smois']=conus_smois
+esa_dict['land_mask']=land_mask
+esa_dict['conus_mask']=conus_mask
+for i in range(len(response_variables)):
+    esa_dict[response_variables[i]]=(conusify(global_arrays[i,:,:],land_mask,conus_mask))
+pickle.dump(esa_dict,open('ESA.pkl','wb'))
