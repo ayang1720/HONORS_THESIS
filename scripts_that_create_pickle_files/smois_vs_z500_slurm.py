@@ -1,8 +1,9 @@
 '''
 this script must be run by a slurm script
+THE TIMES FOR THIS SCRIPT ARE INPUTTED (could be either 0Z or 21Z)
 creates 3 pickle files for y1, y2, y3 with size (ensembles), which are dumped to the scratch directory
 three slurm scripts, where each slurm script runs 1/3rd of the 19 days
-the average over a day 
+these ONLY CREATE THE Y VALUES' average over a day
 '''
 
 '''

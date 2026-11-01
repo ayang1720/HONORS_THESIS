@@ -1,4 +1,9 @@
-#this version imports the pickle file of the average over 24 days, and there are ONLY 100 MEMBERS
+'''
+this python script pulls the pickle file from the scratch directory that includes
+smois data averaged over 1 day, plots it, and saves it to the scratch directory
+'''
+
+#this version predates 10/19, computes correlation for all 6 smois cases (the new version only looks at the first case)
 
 '''
 NOTE: when making different plots, remember to change the name of the files created!
@@ -7,6 +12,9 @@ Creating a time series of MPAS plots NOTE: new update 8/3, trying new smois arra
 
 #10/9 gif creation:
 #convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/*.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/6_cases_time_series_updated.gif
+
+#10/21 gif creation:
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/*rs.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/smois_6_cases/created_with_24_hour_pickle_files.gif
 
 #NOTE: 10/4, heavily changed this script, look at past versions if want to return to them
 
@@ -30,7 +38,7 @@ print(np.shape(xs_dict['x_t_gp']))
 xs=np.array([(xs_dict['x_t_gp']),(xs_dict['x_b_gp']),(xs_dict['x_t_ca']),\
         (xs_dict['x_b_ca']),(xs_dict['x_t_fl']),(xs_dict['x_b_fl'])])
 
-number_of_ensembles=100
+number_of_ensembles=500
 ncells=40962
 response_variables=['height_500hPa']
 response_variables2=['height_500hPa']
@@ -43,7 +51,7 @@ esa_dict=pickle.load(open('ESA.pkl','rb'))
 latCell=esa_dict['lat_1d'] #40962 lat cells
 lonCell=esa_dict['lon_1d'] #40962 lon cells
 
-fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_days.pkl'
+fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_hours.pkl'
 global_arrays_dict=pickle.load(open(fname,'rb'))
 
 fig,axs=plt.subplots(nrows=3,ncols=2,figsize=(24,15),constrained_layout=True,\
@@ -111,11 +119,11 @@ for x in xs:
         fig.colorbar(sc,ax=axs[2,1])
         statgood_dict['case_6']=statgood
     case+=1
-plt.savefig(path+time.strftime('%Y-%m-%d')+'_created_with_pickle_files_avg_over_24_days.png')
+plt.savefig(path+time.strftime('%Y-%m-%d')+'_created_with_pickle_files_avg_over_24_hours.png')
 plt.close()
 
 #pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/'+time.strftime('%m-%d')+'.pkl','wb'))
 
 #NOTE: this is the pickle file not the png
 #NOTE: updated 10/21 png name, note that these are created with pickle files
-#pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/'+time.strftime('%m-%d')+'_created_with_pickle_files_avg_over_24_days.pkl','wb'))
+#pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/'+time.strftime('%m-%d')+'_created_with_pickle_files_avg_over_24_hours.pkl','wb'))

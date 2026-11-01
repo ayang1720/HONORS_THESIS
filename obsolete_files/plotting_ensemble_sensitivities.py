@@ -1,4 +1,11 @@
 '''
+note made 10/31/26:
+pulls correlations from a pickle file and plots it
+the pickle file it was supposed to pull from (esa.pkl) now no longer contains the correct array
+additionally, this creates a plot of the 5 atmospheric responses, which is now no longer the focus
+'''
+
+'''
 Alex Yang's Honors Thesis SU26 Task 5+
 '''
 

@@ -1,10 +1,13 @@
 '''
+note made 10/31/26:
 this script creates a pickle file and dumps it to the scratch directory
 /fs/scratch/PAS3252/yang/HONORS_THESIS/x1_and_x2_at_0_utc.pkl
 -the pickle file contains a dictionary with 2 arrays
 -each array has size (ensembles)
 -each element in the array contains the area-averaged soil moisture
 values for the range of lat/lon cells in great plains or russia (x1 and x2)
+
+the goal of this script was to make an easily accessbile data for sanity checking, not for plotting
 '''
 
 '''
