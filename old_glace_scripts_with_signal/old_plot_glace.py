@@ -43,7 +43,7 @@ while(time<=ftime):
     number_of_statistically_significant=round(statgood.size/ncells*100,3)
     axs.set_title('Smois on 7/14 vs. '+response_variables[0]+' on '+time.strftime('%m/%d'),fontsize=18)
     sc=axs.scatter(lons,lats,c=statgood,\
-                        cmap='jet',s=50,marker='*',transform=ccrs.PlateCarree())
+                        cmap='jet',vmin=0,vmax=0.05,s=50,marker='*',transform=ccrs.PlateCarree())
     fig.colorbar(sc,shrink=0.7,orientation="horizontal")
 
     plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'.png')

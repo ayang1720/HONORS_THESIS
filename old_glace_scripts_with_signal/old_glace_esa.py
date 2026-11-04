@@ -6,7 +6,10 @@ Alex Yang Honors Thesis
 '''
 
 #new version of the convert command 10/31/26
-#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series.gif
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*0.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series.gif
+
+#new version of the convert command 11/3/26 -> this version plots the plots made using the pickle files for 100 members averaged over 24 days
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*_using_pickle_file.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series_using_pickle_files.gif
 
 
 #imports
@@ -36,14 +39,10 @@ def construct_array(responses,time,number_of_ensembles,ncells):
     for i in range(number_of_ensembles):
         datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
         paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+datetime+'.nc'
-        paths_minus_3_hours[i]=paths[i][:-22]+str(time-timedelta(hours=3))+'.nc'
-        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(" ", "_")
-        paths_minus_3_hours[i]=paths_minus_3_hours[i].replace(":", ".")
     for i in range(number_of_ensembles):
         fname=paths[i]
         fname2=paths_minus_3_hours[i]
         nc=Dataset(fname)
-        nd=Dataset(fname2)
         datetime=time.strftime('%Y-%m-%d_%H.%M.%S')
         datetime=datetime.replace(" ", "_")
         #finding the average of the response variables over a day
@@ -60,7 +59,6 @@ def construct_array(responses,time,number_of_ensembles,ncells):
         sum_over_a_day/=8
         array_of_global_response_variables[i,:]=sum_over_a_day
         nc.close()
-        nd.close()
         ne.close()
         print('day: '+day)
         print('ensemble #'+str(i+1))
@@ -116,6 +114,20 @@ def significant_cells(pvalues,lons,lats):
 #output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
 def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
     global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
+    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
+    global_arrays_2d=global_arrays[:,:]
+    transposed_global_arrays=global_arrays_2d.T
+    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
+    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    return pvalues
+
+#input: glaced smois array, global array, datetime of the simulation, number of ensembles, ncells
+#this version of the function takes the completed global arrays as an argument, saving the step of computing
+#global_arrays_array has 19 items in it; each item is a 2d array of shape (100,40962)
+#output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
+def glace_esa_input_global_arrays(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
+    global_arrays=global_arrays_array
     correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
     global_arrays_2d=global_arrays[:,:]
     transposed_global_arrays=global_arrays_2d.T
