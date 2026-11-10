@@ -14,6 +14,7 @@ import sys
 #NOTE: created two slurm scripts that run this guy
 key_int=int(sys.argv[1])
 
+#returns: 2d array of size (number_of_ensembles,ncells)
 def construct_array(time,number_of_ensembles,ncells,timedelta_string):
     day=time.strftime('%m/%d')
     array_of_global_response_variables=np.zeros((number_of_ensembles,ncells))
@@ -57,12 +58,14 @@ for time in times:
     datetimes[i]=datetime.strptime(time,'%Y%m%d%H%M%S')
     i+=1
 
+#each global_array has size (number_of_ensembles,ncells)
 if key_int==0:
     for time in datetimes:
         statgood_dict={}
         statgood_dict['global_array']=construct_array(time,100,40962,'timedelta_days')
         pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_days.pkl','wb'))
 
+#each global_array has size (number_of_ensembles,ncells)
 if key_int==1:
     for time in datetimes:
         statgood_dict={}

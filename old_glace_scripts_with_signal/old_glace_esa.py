@@ -11,6 +11,9 @@ Alex Yang Honors Thesis
 #new version of the convert command 11/3/26 -> this version plots the plots made using the pickle files for 100 members averaged over 24 days
 #convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*_using_pickle_file.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series_using_pickle_files.gif
 
+#new version of the convert command 11/10/26 -> this version plots the plots made using the pickle files for 100 members averaged over 24 hours
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*_hours.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series_using_pickle_files_averaged_over_24_hours.gif
+
 
 #imports
 import pickle
