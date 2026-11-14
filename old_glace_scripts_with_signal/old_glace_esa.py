@@ -20,6 +20,12 @@ Alex Yang Honors Thesis
 #new version of the convert command 11/10/26 -> this version plots the plots made using the pickle files for 100 members averaged over 24 hours (testing the new function call, does it make the same plot?)
 #convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*_hours.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series_using_pickle_files_averaged_over_24_hours_2.gif
 
+#new version of the convert command 11/13/26 -> this version plots the 850 hPa plots made using the pickle files for 100 members averaged over 24 hours
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/850_hPa/*_hours.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/850_hPa/850_hPa_old_time_series_using_pickle_files_averaged_over_24_hours.gif
+
+#new version of the convert command 11/13/26 -> this version plots the 850 hPa plots made using the pickle files for 100 members averaged over 24 days
+#convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/850_hPa/*_days.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/850_hPa/850_hPa_old_time_series_using_pickle_files_averaged_over_24_days.gif
+
 
 #imports
 import pickle
@@ -136,6 +142,17 @@ def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,nce
 #global_arrays_array has 19 items in it; each item is a 2d array of shape (100,40962)
 #output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
 def glace_esa_input_global_arrays(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
+    global_arrays=global_arrays_array
+    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
+    global_arrays_2d=global_arrays[:,:]
+    transposed_global_arrays=global_arrays_2d.T
+    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
+    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
+    return pvalues
+
+#same as the above function, but returns correlations instead of p-values
+def glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
     global_arrays=global_arrays_array
     correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
     global_arrays_2d=global_arrays[:,:]

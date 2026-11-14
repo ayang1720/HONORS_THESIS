@@ -9,6 +9,9 @@ for each day instead of constructing them for all 100 members, thus saving time
 11/10 edit:
 made it an argument to call the function to plot to consider whether we're plotting
 correlations or pvalues AND function call includes whether it's avg 24 days or hours
+
+11/13 edit:
+now accepts 3 settings, creating 2**3=8 possbile plots depending on combination of booleans
 '''
 
 '''
@@ -32,12 +35,18 @@ correlations=True
 
 #NOTE: change these settings to switch which of the 2 pickle files is used for plotting
 #uses the pickle file for 24 days average (old, wrong)
-averaging_over_24_days=True
+#averaging_over_24_days=True
 #usees the pickle file for 24 hours average (new, fixed)
-#averaging_over_24_days=False
+averaging_over_24_days=False
+
+#NOTE: change these settings to decide whether to plot using 850 mb or 500 mb geometric heights
+#height_500_hPa=True
+height_500_hPa=False
+
+#NOTE: This value should be changed to accommodate >100 members!
+number_of_ensembles=100
 
 path='/fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/'
-number_of_ensembles=100 #NOTE: This value should be changed to accommodate >100 members!
 ncells=40962
 response_variables=['height_500hPa']
 itime=datetime.strptime('20210714210000','%Y%m%d%H%M%S') #7/14/21 at 21Z
@@ -61,16 +70,31 @@ for time in times:
 
 global_arrays=np.empty(len(times),dtype=object)
 
+#plotting function
 
-def plot_glace(correlations_boolean,over_24_days_boolean):
+def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_of_ensembles):
+    if correlations_boolean==True:
+        plotting_over_string='_correlations'
+    if correlations_boolean==False:
+        plotting_over_string='_pvalues'
+
     if over_24_days_boolean==True:
         period='days'
     if over_24_days_boolean==False:
         period='hours'
+    if height_500_hPa==True:
+        pressure_level="500 hPa heights"
+    if height_500_hPa==False:
+        pressure_level="850 hPa heights"
 
     for i in range(19):
         time=datetimes[i]
-        fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_'+period+'.pkl'
+
+        if height_500_hPa==True:
+            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/850hPa_global_arrays/850_hPa_global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_'+period+'.pkl'
+        if height_500_hPa==False:
+            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_'+period+'.pkl'
+
         global_arrays_dict=pickle.load(open(fname,'rb'))
         this_global_array=global_arrays_dict['global_array']
         #NOTE: need to consider the first 100 members only, slice the first number_of_ensembles
@@ -92,7 +116,12 @@ def plot_glace(correlations_boolean,over_24_days_boolean):
     time=itime #because an earlier line made time=ftime after running the loop
 
     while(time<=ftime):
-        pvalues=old_glace_esa.glace_esa_input_global_arrays(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+
+        if correlations_boolean==True:
+            pvalues=old_glace_esa.glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+        if correlations_boolean==False:
+            pvalues=old_glace_esa.glace_esa_input_global_arrays(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+
         fig,axs=plt.subplots(nrows=1,ncols=1,figsize=(15,10),layout='constrained',\
         subplot_kw={"projection":ccrs.PlateCarree()})
         gl=axs.gridlines(draw_labels=True,color='black',linewidth=1,linestyle=':')
@@ -102,23 +131,26 @@ def plot_glace(correlations_boolean,over_24_days_boolean):
         axs.set_ylim(-90, 90)
 
         statgood,lons,lats=old_glace_esa.significant_cells(pvalues[0],lonCell,latCell)
-        number_of_statistically_significant=round(statgood.size/ncells*100,3)
-        axs.set_title('Smois on 7/14 vs. '+response_variables[0]+' on '+time.strftime('%m/%d'),fontsize=18)
+        axs.set_title('Smois on 7/14 vs. '+pressure_level+' on '+time.strftime('%m/%d')+plotting_over_string,fontsize=18)
         sc=axs.scatter(lons,lats,c=statgood,\
                             cmap='jet',vmin=0,vmax=0.05,s=50,marker='*',transform=ccrs.PlateCarree())
         fig.colorbar(sc,shrink=0.7,orientation="horizontal")
 
-        plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_24_'+period+'.png')
+        if height_500_hPa==True:
+            plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_24_'+period+plotting_over_string+'.png')
+        if height_500_hPa==False:
+            plt.savefig(path+'/850_hPa/glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_24_'+period+plotting_over_string+'.png')
 
         plt.close()
         time+=timedelta(days=1)
         print("plotting day " + str ( i + 1 ) + " of 19")
         i+=1
 
-if averaging_over_24_days:
-    print("plotting average over 24 days")
-    plot_glace(correlations,True)
 
-if averaging_over_24_days==False:
-    print("plotting average over 24 hours")
-    plot_glace(correlations,False)
+#script
+
+print("Plotting using correlations == " + str(correlations))
+print("Plotting using height 500 hPa == " + str(height_500_hPa))
+print("Plotting using number of ensembles == " + str(number_of_ensembles))
+print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
+plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
