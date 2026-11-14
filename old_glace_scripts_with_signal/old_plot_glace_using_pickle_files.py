@@ -135,6 +135,7 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
             vminvalue=0
             vmaxvalue=0.05
         if correlations_boolean==True:
+            statgood,lons,lats=pvalues,lonCell,latCell
             vminvalue=-.5
             vmaxvalue=.5
 
@@ -163,6 +164,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 1")
 
 correlations,averaging_over_24_days,height_500_hPa=True,True,False
 print("Plotting using correlations == " + str(correlations))
@@ -170,6 +172,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 2")
 
 correlations,averaging_over_24_days,height_500_hPa=True,False,True
 print("Plotting using correlations == " + str(correlations))
@@ -177,6 +180,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 3")
 
 correlations,averaging_over_24_days,height_500_hPa=False,True,True
 print("Plotting using correlations == " + str(correlations))
@@ -184,6 +188,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 4")
 
 correlations,averaging_over_24_days,height_500_hPa=True,False,False
 print("Plotting using correlations == " + str(correlations))
@@ -191,6 +196,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 5")
 
 correlations,averaging_over_24_days,height_500_hPa=False,True,False
 print("Plotting using correlations == " + str(correlations))
@@ -198,6 +204,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 6")
 
 correlations,averaging_over_24_days,height_500_hPa=False,False,True
 print("Plotting using correlations == " + str(correlations))
@@ -205,6 +212,7 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 7")
 
 correlations,averaging_over_24_days,height_500_hPa=False,False,False
 print("Plotting using correlations == " + str(correlations))
@@ -212,3 +220,4 @@ print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+print("case 8")

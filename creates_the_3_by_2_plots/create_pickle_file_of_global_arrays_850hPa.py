@@ -1,5 +1,9 @@
 #this version of the script creates pickle files for the 850mb geometric heights
 
+#NOTE: edit 11/13 to only look at the first 100 members when averaging over 24 days because member 224 caused issues
+#edit made to line 71
+#construct_array(time,500,40962,'timedelta_days') -> construct_array(time,100,40962,'timedelta_days')
+
 '''
 This file creates 19 pickle files that get dumped to the scratch directory
 Each pickle file contains an array of size (number_of_ensembles,ncells)
@@ -64,7 +68,7 @@ for time in times:
 if key_int==0:
     for time in datetimes:
         statgood_dict={}
-        statgood_dict['global_array']=construct_array(time,500,40962,'timedelta_days')
+        statgood_dict['global_array']=construct_array(time,100,40962,'timedelta_days')
         pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/850hPa_global_arrays/850_hPa_global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_days.pkl','wb'))
 
 #each global_array has size (number_of_ensembles,ncells)
@@ -81,4 +85,4 @@ if key_int==1:
 #then use these pickle files to correlate against both the 100 member smois array and the 500 member smois array
 #when using the 100 member smois array, make sure to slice the global array to only use the first 100 members
 
-#import this pickle file into glace_esa_heights_only.py, to prevent having to cal the construct_array function every time
+#import this pickle file into glace_esa_heights_only.py, to prevent having to call the construct_array function every time

@@ -1,3 +1,6 @@
+#NOTE: edit 11/13 to make average of 24 days only consider the first 100 ensembles
+#line 68: construct_array(time,500,40962,'timedelta_days')->construct_array(time,100,40962,'timedelta_days')
+
 '''
 This file creates 19 pickle files that get dumped to the scratch directory
 Each pickle file contains an array of size (number_of_ensembles,ncells)
@@ -62,7 +65,7 @@ for time in times:
 if key_int==0:
     for time in datetimes:
         statgood_dict={}
-        statgood_dict['global_array']=construct_array(time,500,40962,'timedelta_days')
+        statgood_dict['global_array']=construct_array(time,100,40962,'timedelta_days')
         pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_days.pkl','wb'))
 
 #each global_array has size (number_of_ensembles,ncells)

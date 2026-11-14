@@ -86,7 +86,7 @@ def construct_array(responses,time,number_of_ensembles,ncells):
 #correlation: a 1d array representing correlation between X/R -> all values between -1 and 1
 #note that for rainnc, certain values have been masked out, so array might have size ~39281
 
-def cor(X1d,R2d):
+def cor(X1d,R2d,correlation_calculation):
     number_of_ensembles = len(X1d)
     X1d_mean=np.mean(X1d)
     R2d_mean=np.mean(R2d, axis=-1)
@@ -100,8 +100,11 @@ def cor(X1d,R2d):
 
     correlation=np.array(correlation,dtype=float)
 
-    flag_keep=np.invert(np.isnan(correlation))
-    correlation=correlation[flag_keep]
+    '''if correlation_calculation:
+        flag_keep=np.invert(np.isnan(correlation))
+        correlation=correlation[flag_keep]'''
+
+    correlation[np.isnan(correlation)]=0
 
     return correlation
 
@@ -146,19 +149,19 @@ def glace_esa_input_global_arrays(glaced_smois_array,global_arrays_array,number_
     correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
     global_arrays_2d=global_arrays[:,:]
     transposed_global_arrays=global_arrays_2d.T
-    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
-    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays,False).size
+    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays,False) #remaining will be zeros
     pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
     return pvalues
 
 #same as the above function, but returns correlations instead of p-values
 def glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
     global_arrays=global_arrays_array
-    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
+    correlations=np.zeros(ncells) #(40962) correlation between X/R, should be all values between -1,1
     global_arrays_2d=global_arrays[:,:]
     transposed_global_arrays=global_arrays_2d.T
-    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
-    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
+    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays,True).size
+    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays,True) #remaining will be zeros
     return correlations
 
 #script
