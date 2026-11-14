@@ -159,8 +159,7 @@ def glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays_
     transposed_global_arrays=global_arrays_2d.T
     ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
     correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
-    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
-    return pvalues
+    return correlations
 
 #script
 
