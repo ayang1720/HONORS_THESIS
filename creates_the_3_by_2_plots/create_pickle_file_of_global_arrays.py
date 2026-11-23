@@ -1,6 +1,16 @@
 #NOTE: edit 11/13 to make average of 24 days only consider the first 100 ensembles
 #line 68: construct_array(time,500,40962,'timedelta_days')->construct_array(time,100,40962,'timedelta_days')
 
+#NOTE: edit 11/23 to use 500 members for 24 days, but just ignore the members that die
+#added
+'''
+try:
+            nc=Dataset(fname)
+        except FileNotFoundError:
+            print("skipped ensemble #"+str(i+1)+" at day "+day)
+            continue
+'''
+
 '''
 This file creates 19 pickle files that get dumped to the scratch directory
 Each pickle file contains an array of size (number_of_ensembles,ncells)
@@ -27,13 +37,18 @@ def construct_array(time,number_of_ensembles,ncells,timedelta_string):
         paths[i]='/fs/ess/PAS2635/LandAir_Predictability/member_'+str((i+1)).zfill(5)+'/diag.'+datetime+'.nc'
     for i in range(number_of_ensembles):
         fname=paths[i]
-        nc=Dataset(fname)
         sum_over_a_day=np.zeros(ncells)
-        for k in range(8):
+        if timedelta_string=='timedelta_hours':
+            krange=range(8)
+            ktotal=8
+        if timedelta_string=='timedelta_days':
+            krange=range(6)
+            ktotal=6
+        for k in krange:
             if timedelta_string=='timedelta_hours':
                 hour_step=timedelta(hours=(k+1)*3) #added hours here
             if timedelta_string=='timedelta_days':
-                hour_step=timedelta(days=(k+1)*3) #days here
+                hour_step=timedelta(days=(k+1)) #days here
             itime=time.strptime(datetime,'%Y-%m-%d_%H.%M.%S')
             itime+=hour_step
             jtime=itime.strftime('%Y-%m-%d_%H.%M.%S')
@@ -41,9 +56,8 @@ def construct_array(time,number_of_ensembles,ncells,timedelta_string):
             ne=Dataset(fname3)
             array_of_global_response_variables[i,:]=(np.squeeze(np.array(ne['height_500hPa'])))
             sum_over_a_day+=array_of_global_response_variables[i,:]
-        sum_over_a_day/=8
+        sum_over_a_day/=ktotal
         array_of_global_response_variables[i,:]=sum_over_a_day
-        nc.close()
         ne.close()
         print('timedelta argument: '+timedelta_string[10:])
         print('day: '+day)
@@ -65,8 +79,8 @@ for time in times:
 if key_int==0:
     for time in datetimes:
         statgood_dict={}
-        statgood_dict['global_array']=construct_array(time,100,40962,'timedelta_days')
-        pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_days.pkl','wb'))
+        statgood_dict['global_array']=construct_array(time,500,40962,'timedelta_days')
+        pickle.dump(statgood_dict,open('/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_6_days.pkl','wb'))
 
 #each global_array has size (number_of_ensembles,ncells)
 if key_int==1:

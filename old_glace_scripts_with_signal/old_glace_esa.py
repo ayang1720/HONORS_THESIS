@@ -5,6 +5,8 @@ Alex Yang Honors Thesis
 /fs/scratch/PAS3252/yang/HONORS_THESIS
 '''
 
+#NOTE: on 11/23/26, reran this script after changing number_of_ensembles to 500 (to create 500 smois arrays)
+
 #new version of the convert command 10/31/26
 #convert -delay 50 -loop 0 /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/*0.png /fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/old_time_series.gif
 
@@ -35,7 +37,7 @@ from datetime import datetime, timedelta
 from scipy.stats import beta, false_discovery_control
 
 #settings
-number_of_ensembles=100
+number_of_ensembles=500
 ncells=40962
 response_variables=['height_500hPa','height_250hPa','rainnc','t2m','q2']
 smois_start_time=datetime.strptime('20210714210000','%Y%m%d%H%M%S') #7/14/21 at 21Z
@@ -81,12 +83,12 @@ def construct_array(responses,time,number_of_ensembles,ncells):
 
 #input:
 #X: 100 ensemble members' area averaged soil moisture array july 14th (glace mask)
-#R: atmospheric state of 100 values on variable datetime for a single cell (~39281 or 40962,100)
+#R: atmospheric state of 100 values on variable datetime for a single cell (~39281 or 40962,500)
 #output:
 #correlation: a 1d array representing correlation between X/R -> all values between -1 and 1
 #note that for rainnc, certain values have been masked out, so array might have size ~39281
 
-def cor(X1d,R2d,correlation_calculation):
+def cor(X1d,R2d,number_of_ensembles):
     number_of_ensembles = len(X1d)
     X1d_mean=np.mean(X1d)
     R2d_mean=np.mean(R2d, axis=-1)
@@ -104,6 +106,14 @@ def cor(X1d,R2d,correlation_calculation):
         flag_keep=np.invert(np.isnan(correlation))
         correlation=correlation[flag_keep]'''
 
+    '''print(correlation.shape)
+    print(correlation.shape[0])
+    for i in range(correlation.shape[0]):
+        if (correlation[i]>=0)==False and (correlation[i]<=1)==False:
+            if not np.isnan(correlation[i]):
+                print(correlation[i])
+                print(i)'''
+
     correlation[np.isnan(correlation)]=0
 
     return correlation
@@ -116,6 +126,7 @@ def pvalue(correlation,number_of_ensembles):
     dist = beta(n/2 - 1, n/2 - 1, loc=-1, scale=2)
     r=correlation
     p=2*dist.cdf(-abs(r))
+    p=np.clip(p, 0, 1)
     p=false_discovery_control(p, axis=0, method='by')
     return p
 
@@ -128,40 +139,18 @@ def significant_cells(pvalues,lons,lats):
     lats=lats[pvalue_mask]
     return pvalues,lons,lats
 
-#input: glaced smois array, 1d array of only response variables, datetime of the simulation, number of ensembles, ncells
-#output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
-def glace_esa(glaced_smois_array,response_variables,time,number_of_ensembles,ncells):
-    global_arrays=construct_array(response_variables,time,number_of_ensembles,ncells) #shape: (# of responses, 100 ensembles, 40962 cells)
-    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
-    global_arrays_2d=global_arrays[:,:]
-    transposed_global_arrays=global_arrays_2d.T
-    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays).size
-    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays) #remaining will be zeros
-    pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
-    return pvalues
-
 #input: glaced smois array, global array, datetime of the simulation, number of ensembles, ncells
 #this version of the function takes the completed global arrays as an argument, saving the step of computing
 #global_arrays_array has 19 items in it; each item is a 2d array of shape (100,40962)
 #output: 2d array of pvalues of the correlation between the glaced smois array on 7/14 and the date specified
-def glace_esa_input_global_arrays(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
-    global_arrays=global_arrays_array
-    correlations=np.zeros((len(response_variables),ncells)) #(5,40962) correlation between X/R, should be all values between -1,1
-    global_arrays_2d=global_arrays[:,:]
-    transposed_global_arrays=global_arrays_2d.T
-    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays,False).size
-    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays,False) #remaining will be zeros
+def glace_esa_input_global_arrays(glaced_smois_array,global_arrays,number_of_ensembles):
+    correlations=cor(glaced_smois_array,global_arrays.T,number_of_ensembles) #remaining will be zeros
     pvalues=pvalue(correlations,number_of_ensembles) #creates an array of pvalues for a specified time/date
     return pvalues
 
 #same as the above function, but returns correlations instead of p-values
-def glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays_array,number_of_ensembles,ncells):
-    global_arrays=global_arrays_array
-    correlations=np.zeros(ncells) #(40962) correlation between X/R, should be all values between -1,1
-    global_arrays_2d=global_arrays[:,:]
-    transposed_global_arrays=global_arrays_2d.T
-    ncells_for_this_response=cor(glaced_smois_array,transposed_global_arrays,True).size
-    correlations[:ncells_for_this_response]=cor(glaced_smois_array,transposed_global_arrays,True) #remaining will be zeros
+def glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays,number_of_ensembles):
+    correlations=cor(glaced_smois_array,global_arrays.T,number_of_ensembles) #remaining will be zeros
     return correlations
 
 #script

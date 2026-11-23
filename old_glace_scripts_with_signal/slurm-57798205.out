@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/old_glace_scripts_with_signal/old_plot_glace_using_pickle_files.py", line 161, in <module>
+    plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
+  File "/users/PAS3252/ayang1720/HONORS_THESIS/old_glace_scripts_with_signal/old_plot_glace_using_pickle_files.py", line 124, in plot_glace
+    pvalues=old_glace_esa.glace_esa_input_global_arrays(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+TypeError: glace_esa_input_global_arrays() takes 3 positional arguments but 4 were given

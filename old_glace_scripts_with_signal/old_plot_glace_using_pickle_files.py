@@ -44,7 +44,7 @@ averaging_over_24_days=False
 height_500_hPa=False
 
 #NOTE: This value should be changed to accommodate >100 members!
-number_of_ensembles=100
+number_of_ensembles=500
 
 path='/fs/scratch/PAS3252/yang/HONORS_THESIS/timeseries/old_plots/'
 ncells=40962
@@ -79,9 +79,9 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
         plotting_over_string='_pvalues'
 
     if over_24_days_boolean==True:
-        period='days'
+        period='6_days'
     if over_24_days_boolean==False:
-        period='hours'
+        period='24_hours'
     if height_500_hPa==True:
         pressure_level="500 hPa heights"
     if height_500_hPa==False:
@@ -90,10 +90,10 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
     for i in range(19):
         time=datetimes[i]
 
-        if height_500_hPa==True:
-            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/850hPa_global_arrays/850_hPa_global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_'+period+'.pkl'
         if height_500_hPa==False:
-            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_24_'+period+'.pkl'
+            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/850hPa_global_arrays/850_hPa_global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_'+period+'.pkl'
+        if height_500_hPa==True:
+            fname='/fs/scratch/PAS3252/yang/HONORS_THESIS/statgood_pickle_files/global_arrays/global_array_at_time_'+time.strftime('%m-%d')+'_using_timedelta_'+period+'.pkl'
 
         global_arrays_dict=pickle.load(open(fname,'rb'))
         this_global_array=global_arrays_dict['global_array']
@@ -108,6 +108,7 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
     #script
     esa_dict=pickle.load(open('old_ESA.pkl','rb'))
     glaced_smois_array=esa_dict['smois_1d'] #100 smois values
+    #NOTE: as of 11/23, this array now contains 500 smois values
     latCell=esa_dict['lat_1d'] #40962 lat cells
     lonCell=esa_dict['lon_1d'] #40962 lon cells
 
@@ -118,9 +119,9 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
     while(time<=ftime):
 
         if correlations_boolean==True:
-            pvalues=old_glace_esa.glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+            pvalues=old_glace_esa.glace_esa_input_global_arrays_correlations(glaced_smois_array,global_arrays[i],number_of_ensembles)
         if correlations_boolean==False:
-            pvalues=old_glace_esa.glace_esa_input_global_arrays(glaced_smois_array,global_arrays[i],number_of_ensembles,ncells)
+            pvalues=old_glace_esa.glace_esa_input_global_arrays(glaced_smois_array,global_arrays[i],number_of_ensembles)
 
         fig,axs=plt.subplots(nrows=1,ncols=1,figsize=(15,10),layout='constrained',\
         subplot_kw={"projection":ccrs.PlateCarree()})
@@ -139,85 +140,88 @@ def plot_glace(correlations_boolean,over_24_days_boolean,height_500_hPa,number_o
             vminvalue=-.5
             vmaxvalue=.5
 
-        axs.set_title('Smois on 7/14 vs. '+pressure_level+' on '+time.strftime('%m/%d')+plotting_over_string,fontsize=18)
+        axs.set_title('Smois on 7/14 vs. '+pressure_level+' on '+time.strftime('%m/%d')+plotting_over_string+"_over"+period,fontsize=18)
         
         sc=axs.scatter(lons,lats,c=statgood,\
                             cmap='jet',vmin=vminvalue,vmax=vmaxvalue,s=50,marker='*',transform=ccrs.PlateCarree())
         fig.colorbar(sc,shrink=0.7,orientation="horizontal")
 
         if height_500_hPa==True:
-            plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_24_'+period+plotting_over_string+'.png')
+            plt.savefig(path+'glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_'+period+plotting_over_string+'.png')
         if height_500_hPa==False:
-            plt.savefig(path+'/850_hPa/glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_24_'+period+plotting_over_string+'.png')
+            plt.savefig(path+'/850_hPa/glace_plot_'+time.strftime('%Y-%m-%d_%H.%M.%S')+'_using_pickle_file_averaged_over_'+period+plotting_over_string+'.png')
 
         plt.close()
         time+=timedelta(days=1)
         print("plotting day " + str ( i + 1 ) + " of 19")
         i+=1
 
+#sanity checking case 6, there was an error, correlations not between 0 and 1
+correlations,averaging_over_24_days,height_500_hPa=False,True,False
+plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
 
 #script
 
 correlations,averaging_over_24_days,height_500_hPa=True,True,True
+print("case 1")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 1")
 
 correlations,averaging_over_24_days,height_500_hPa=True,True,False
+print("case 2")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 2")
 
 correlations,averaging_over_24_days,height_500_hPa=True,False,True
+print("case 3")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 3")
 
 correlations,averaging_over_24_days,height_500_hPa=False,True,True
+print("case 4")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 4")
 
 correlations,averaging_over_24_days,height_500_hPa=True,False,False
+print("case 5")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 5")
 
 correlations,averaging_over_24_days,height_500_hPa=False,True,False
+print("case 6")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 6")
 
 correlations,averaging_over_24_days,height_500_hPa=False,False,True
+print("case 7")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 7")
 
 correlations,averaging_over_24_days,height_500_hPa=False,False,False
+print("case 8")
 print("Plotting using correlations == " + str(correlations))
 print("Plotting using height 500 hPa == " + str(height_500_hPa))
 print("Plotting using number of ensembles == " + str(number_of_ensembles))
 print("Plotting using averaging over 24 days == " + str(averaging_over_24_days))
 plot_glace(correlations,averaging_over_24_days,height_500_hPa,number_of_ensembles)
-print("case 8")
